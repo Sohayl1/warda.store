@@ -840,9 +840,9 @@
             }
         }
 
-        /* ==================== VARIABLES ==================== */
         :root {
-            --bg-body: #fef6f9;
+            /* 1. تم تعديل لون الخلفية للون الكريمي */
+            --bg-body: #f7eedf;
             --bg-card: #ffffff;
             --text-main: #2c1810;
             --text-muted: #8a6d5b;
@@ -857,11 +857,67 @@
             --shadow-medium: 0 15px 40px rgba(156, 39, 176, 0.15);
         }
 
+        /* ==================== تعديل الخلفية (Bloom Red) ==================== */
+        .bloom-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background-color: var(--bg-body);
+            overflow: hidden;
+        }
+
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px); /* ضبابية عالية للنعومة */
+            opacity: 0.5; /* شفافية متوسطة */
+            animation: floatBlob 15s infinite alternate ease-in-out;
+        }
+
+        /* 2. تعديل البقع لتكون تدرجات حمراء خفيفة */
+        .blob-1 {
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, #ffb3c1 0%, rgba(255, 179, 193, 0) 70%); /* أحمر ناعم */
+            top: -150px;
+            left: -100px;
+            animation-duration: 25s;
+        }
+
+        .blob-2 {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, #ffcccb 0%, rgba(255, 204, 203, 0) 70%); /* أحمر مائل للبرتقالي الخافت */
+            top: 40%;
+            right: -100px;
+            animation-duration: 30s;
+            animation-delay: -5s;
+        }
+
+        .blob-3 {
+            width: 700px;
+            height: 700px;
+            background: radial-gradient(circle, #ffe4e1 0%, rgba(255, 228, 225, 0) 70%); /* وردي محمر فاتح جداً */
+            bottom: -200px;
+            left: 10%;
+            animation-duration: 20s;
+            animation-delay: -10s;
+        }
+
+        @keyframes floatBlob {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(50px, 50px) scale(1.1); }
+        }
+
         /* ==================== RESET & BASE ==================== */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent !important; /* إزالة الوميض الأزرق */
         }
 
         body {
@@ -870,8 +926,19 @@
             direction: rtl;
             overflow-x: hidden;
             font-family: 'Cairo', 'Almarai', sans-serif;
-            background-image: radial-gradient(#f8bbd9 1px, transparent 1px);
-            background-size: 30px 30px;
+            /* === بداية التعديل: خلفية ورقية === */
+            background-image:
+            /* 1. طبقة ملمس الورق (Pattern) */
+            url("https://www.transparenttextures.com/patterns/cream-paper.png"),
+            /* 2. طبقة النقاط الخفيفة (اختياري لو عايزة تحافظي عليها) */
+            radial-gradient(rgba(231, 84, 128, 0.15) 1px, transparent 1px);
+            /* تكرار الخلفية لتملأ الصفحة */
+            background-repeat: repeat;
+            /* حجم النقاط */
+            background-size: auto, 30px 30px;
+            /* دمج الطبقات عشان تبان طبيعية */
+            background-blend-mode: multiply;
+            /* === نهاية التعديل === */
         }
 
         .container {
@@ -3726,6 +3793,30 @@
             box-shadow: 0 0 15px rgba(34, 197, 94, 0.4) !important; /* ظل أخضر خفيف */
         }
 
+        /* ==================== إصلاح زر الواتساب (إلغاء التثبيت) ==================== */
+        @media (max-width: 768px) {
+
+            /* 1. استهداف الزرار داخل فورم الدفع عشان نرجعه لطبيعته */
+            #orderForm .btn-buy-large {
+                position: relative !important; /* كان fixed ودلوقتي خليناه نسبي */
+                bottom: auto !important;
+                left: auto !important;
+                right: auto !important;
+                width: 100% !important;
+                border-radius: 15px !important; /* نرجع الحواف الدائرية */
+                margin-top: 25px !important; /* مسافة تفصله عن الحقول اللي فوقه */
+                margin-bottom: 10px !important;
+                /* تحسين الظل ليكون أخضر يليق بالواتساب */
+                box-shadow: 0 10px 25px rgba(37, 211, 102, 0.3) !important;
+                z-index: 1 !important; /* إلغاء الطبقة العالية */
+            }
+
+            /* 2. إزالة المسافة الكبيرة اللي كنا سايبينها تحت عشان الزرار المثبت */
+            #checkoutSection {
+                margin-bottom: 30px !important; /* تقليل المسافة لتكون طبيعية */
+            }
+        }
+
     </style>
 </head>
 <body>
@@ -4084,7 +4175,7 @@
                 <h2 style="color: var(--accent-pink); margin-bottom: 25px;">
                     <i class="fas fa-shipping-fast"></i> بيانات الشحن والتوصيل
                 </h2>
-                <form id="orderForm">
+                <form id="orderForm" onsubmit="sendOrderToWhatsapp(event)">
                     <div style="margin-bottom: 15px;">
                         <label style="display: block; margin-bottom: 5px;">الاسم</label>
                         <input type="text" id="custName" required style="width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #ddd;">
@@ -4879,6 +4970,52 @@
                 // تحديث النص، وإذا كان فارغاً نضع نصاً افتراضياً
                 displayElement.innerText = text.trim() === "" ? "أحبك يا أمي" : text;
             }
+        }
+
+        // ==================== دالة إرسال الطلب للواتساب ====================
+        window.sendOrderToWhatsapp = function (e) {
+            e.preventDefault(); 
+            // 1. جلب البيانات من الخانات
+            const name = document.getElementById('custName').value;
+            const phone = document.getElementById('custPhone').value;
+            const address = document.getElementById('custAddress').value;
+            const payment = document.getElementById('paymentMethod').value;
+
+            // 2. التحقق من أن السلة ليست فارغة
+            // (ملاحظة: تأكد أن متغير cart معرف لديك في السكريبت الرئيسي)
+            if (!cart || cart.length === 0) {
+                alert('السلة فارغة! 🛒');
+                return;
+            }
+
+            // 3. تجهيز تفاصيل المنتجات
+            let productsText = "";
+            let total = 0;
+
+            cart.forEach((item, index) => {
+                const itemTotal = item.price * item.quantity;
+                total += itemTotal;
+                productsText += `${index + 1}. ${item.name} (عدد ${item.quantity}) - ${itemTotal} ر.س\n`;
+            });
+
+            // 4. تنسيق نص الرسالة
+            let message = `*طلب جديد من الموقع 🌸*\n\n`;
+            message += `👤 *الاسم:* ${name}\n`;
+            message += `📱 *الجوال:* ${phone}\n`;
+            message += `📍 *العنوان:* ${address}\n`;
+            message += `💳 *الدفع:* ${payment}\n`;
+            message += `------------------------\n`;
+            message += `🛒 *الطلبات:*\n${productsText}`;
+            message += `------------------------\n`;
+            message += `💰 *الإجمالي:* ${total} ر.س\n\n`;
+            message += `يرجى تأكيد الطلب.`;
+
+            // 5. رقم الواتساب (ضع رقمك هنا)
+            const myNumber = "966546458993";
+
+            // 6. فتح الرابط
+            const url = `https://wa.me/${myNumber}?text=${encodeURIComponent(message)}`;
+            window.open(url, '_blank');
         }
 
     </script>
