@@ -1388,38 +1388,53 @@
             transform: scale(1.1);
         }
 
+        /* 1. تعديل الطبقة لتكون شفافة تماماً بدون أي لون أو تغبيش */
         .product-overlay {
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(to top, rgba(231,84,128,0.8), transparent);
+            background: transparent !important; /* إلغاء اللون الوردي */
+            backdrop-filter: none !important; /* إلغاء التغبيش */
             display: flex;
             align-items: center;
             justify-content: center;
-            opacity: 0;
+            opacity: 0; /* مخفي افتراضياً */
             transition: opacity 0.3s ease;
+            z-index: 5;
         }
 
+        /* عند التفاعل (لمس أو ماوس) تظهر الطبقة (التي تحتوي الزر فقط) */
         .product-card:hover .product-overlay {
             opacity: 1;
         }
 
+        /* 2. تحسين تصميم الزر ليكون واضحاً جداً فوق الصورة */
         .quick-view-btn {
-            background: white;
-            color: var(--accent-pink);
-            border: none;
-            padding: 12px 25px;
-            border-radius: 25px;
-            font-weight: 600;
+            background: #ffffff;
+            color: var(--accent-pink); /* لون النص وردي */
+            border: 2px solid var(--accent-pink); /* إطار وردي لتمييز الزر */
+            padding: 10px 24px;
+            border-radius: 50px;
+            font-weight: 800;
+            font-size: 0.95rem;
             cursor: pointer;
-            transition: all 0.3s ease;
-            transform: translateY(20px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* ظل قوي للزر */
+            transform: translateY(10px); /* يبدأ من أسفل قليلاً */
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
+        /* حركة ظهور الزر */
         .product-card:hover .quick-view-btn {
             transform: translateY(0);
+        }
+
+        /* تأثير عند مرور الماوس على الزر نفسه */
+        .quick-view-btn:hover {
+            background: var(--accent-pink);
+            color: white;
+            transform: scale(1.05);
         }
 
         .details {
@@ -3235,17 +3250,53 @@
                 z-index: 10;
             }
 
-        /* تحسين ظهور طبقة الأزرار فوق الصورة */
+        /* 1. تعديل الطبقة لتكون شفافة تماماً بدون أي لون أو تغبيش */
         .product-overlay {
-            background: linear-gradient(to top, rgba(231, 84, 128, 0.9) 0%, rgba(231, 84, 128, 0.4) 100%) !important;
-            backdrop-filter: blur(2px);
-            bottom: -100%; /* مخفي في البداية */
-            transition: bottom 0.4s ease;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: transparent !important; /* إلغاء اللون الوردي */
+            backdrop-filter: none !important; /* إلغاء التغبيش */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0; /* مخفي افتراضياً */
+            transition: opacity 0.3s ease;
+            z-index: 5;
         }
 
-        /* عند الوقوف على الكارت، الأزرار تطلع لفوق */
+        /* عند التفاعل (لمس أو ماوس) تظهر الطبقة (التي تحتوي الزر فقط) */
         .product-card:hover .product-overlay {
-            bottom: 0; /* يغطي الصورة */
+            opacity: 1;
+        }
+
+        /* 2. تحسين تصميم الزر ليكون واضحاً جداً فوق الصورة */
+        .quick-view-btn {
+            background: #ffffff;
+            color: var(--accent-pink); /* لون النص وردي */
+            border: 2px solid var(--accent-pink); /* إطار وردي لتمييز الزر */
+            padding: 10px 24px;
+            border-radius: 50px;
+            font-weight: 800;
+            font-size: 0.95rem;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* ظل قوي للزر */
+            transform: translateY(10px); /* يبدأ من أسفل قليلاً */
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        /* حركة ظهور الزر */
+        .product-card:hover .quick-view-btn {
+            transform: translateY(0);
+        }
+
+        /* تأثير عند مرور الماوس على الزر نفسه */
+        .quick-view-btn:hover {
+            background: var(--accent-pink);
+            color: white;
+            transform: scale(1.05);
         }
 
         /* ==================== تحديث شكل الموبايل (أعرض وأقصر) ==================== */
@@ -4512,22 +4563,28 @@
                 htmlContent += `<div style="grid-column: 1/-1; text-align: center; padding: 20px;">لا توجد منتجات في هذا القسم حالياً</div>`;
             }
 
-            htmlContent += filtered.map(p => {
+            // داخل دالة window.filterByCategory
+            htmlContent += filtered.map((p, index) => { // لاحظ إضافة index هنا
                 const isLiked = wishlist.includes(p.id);
                 const heartClass = isLiked ? 'active' : '';
                 const heartIcon = isLiked ? 'fas fa-heart' : 'far fa-heart';
+
+                // حساب التأخير الزمني بناءً على ترتيب الكارت
+                // كل كارت يتأخر 0.1 ثانية عن اللي قبله
+                const delay = index * 0.1;
+
                 return `
-                <div class="product-card animate__animated animate__fadeInUp">
+                <div class="product-card animate__animated animate__fadeInUp" style="animation-delay: ${delay}s; animation-duration: 0.6s;">
                     <div class="product-badge">جديد</div>
-                    <div class="img-container" onclick="openProductPage('${p.id}')">
+                    <div class="img-container">
                         <img src="${p.image}" alt="${p.name}" onerror="this.src='https://via.placeholder.com/300'">
                         <div class="product-overlay">
                             <button class="quick-view-btn" onclick="event.stopPropagation(); openProductPage('${p.id}')">
-                                <i class="fas fa-eye"></i> معاينة
+                                <i class="fas fa-hand-pointer"></i> اضغط للمعاينة
                             </button>
                         </div>
                     </div>
-                    <div class="details" onclick="openProductPage('${p.id}')" style="cursor: pointer;">
+                    <div class="details">
                         <h3>${p.name}</h3>
                         <span class="price">${p.price} ر.س</span>
                         <div class="buttons-wrapper">
