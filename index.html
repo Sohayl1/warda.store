@@ -18,6 +18,25 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <style>
 
+        /* تنسيق أيقونة العملة */
+        .currency-icon {
+            width: 20px; /* عرض اللوجو */
+            height: 20px; /* ارتفاع اللوجو */
+            object-fit: contain;
+            vertical-align: middle; /* محاذاة في وسط السطر مع الرقم */
+            margin-right: 4px; /* مسافة صغيرة بين الرقم واللوجو */
+            display: inline-block;
+            transform: translateY(-2px); /* ضبط دقيق للمحاذاة */
+        }
+
+        /* تكبير اللوجو قليلاً في صفحة المنتج وسلة الشراء */
+        .price-box .currency-icon,
+        .total .currency-icon,
+        .total-price .currency-icon {
+            width: 24px;
+            height: 24px;
+        }
+
         /* تنسيق لوجو الهيرو الجديد */
         .hero-logo {
             width: 160px; /* حجم اللوجو */
@@ -4046,7 +4065,7 @@
                                         <i class="fas fa-trash"></i>
                                     </button>
                                     <div class="total-price" style="font-size: 1.2rem; font-weight: bold;">
-                                        الإجمالي: <span id="customBouquetTotal" style="color: var(--accent-pink);">0</span> ر.س
+                                        الإجمالي: <span id="customBouquetTotal" style="color: var(--accent-pink);">0</span> <img src="رابط_اللوجو_هنا" class="currency-icon">
                                     </div>
                                 </div>
                             </div>
@@ -4442,6 +4461,10 @@
     </div>
 
     <script type="module">
+
+        // استبدل الرابط داخل src برابط اللوجو الخاص بك
+        const riyalIcon = `<img src="https://i.postimg.cc/HWhBJPs9/20250313031815-Saudi-Riyal-Symbol-svg.png" class="currency-icon" alt="SAR">`;
+
         // ==================== استيراد مكتبات الفاير بيس ====================
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
         import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
@@ -4586,7 +4609,7 @@
                     </div>
                     <div class="details">
                         <h3>${p.name}</h3>
-                        <span class="price">${p.price} ر.س</span>
+<span class="price">${p.price} ${riyalIcon}</span>
                         <div class="buttons-wrapper">
                             <button class="btn-quick-add" onclick="event.stopPropagation(); addToCart('${p.id}')">
                                 أضف <i class="fas fa-cart-plus"></i>
@@ -4625,10 +4648,12 @@
         </div>
         <div class="product-info">
             <h2 style="color: var(--text-main);">${p.name}</h2>
-            <div class="price-box">
-                ${p.price} <span class="currency">ر.س</span>
-            </div>
-            
+// داخل content.innerHTML
+// ابحث عن div class="price-box" وغيره ليصبح:
+<div class="price-box">
+    ${p.price} ${riyalIcon}
+</div>
+
             <p class="description">
                 ${productDescription}
             </p>
@@ -4701,20 +4726,24 @@
             container.innerHTML = cart.map(item => {
                 total += (item.price * item.quantity);
                 return `<div style="display:flex; justify-content:space-between; padding:10px; border-bottom:1px solid #eee; align-items:center;">
-                            <div style="flex:1">
-                                <div style="font-weight:bold; font-size:0.9rem;">${item.name}</div>
-                                <div style="font-size:0.8rem; color:#888;">العدد: ${item.quantity}</div>
-                            </div>
-                            <div style="font-weight:bold; color:var(--accent-pink);">${item.price * item.quantity} ر.س</div>
-                            <button onclick="removeFromCart('${item.id}')" style="margin-right:10px; color:red; background:none; border:none; cursor:pointer;"><i class="fas fa-trash"></i></button>
-                        </div>`;
+                    <div style="flex:1">
+                        <div style="font-weight:bold; font-size:0.9rem;">${item.name}</div>
+                        <div style="font-size:0.8rem; color:#888;">العدد: ${item.quantity}</div>
+                    </div>
+                    <div style="font-weight:bold; color:var(--accent-pink); display:flex; align-items:center;">
+                        ${item.price * item.quantity} ${riyalIcon}
+                    </div>
+                    <button onclick="removeFromCart('${item.id}')" style="margin-right:10px; color:red; background:none; border:none; cursor:pointer;"><i class="fas fa-trash"></i></button>
+                </div>`;
             }).join('');
 
             const totalEl = document.getElementById('cartTotal');
-            if (totalEl) totalEl.textContent = total + ' ر.س';
+            // استخدام innerHTML بدلاً من textContent لعرض الصورة
+            if (totalEl) totalEl.innerHTML = total + ' ' + riyalIcon;
 
             const finalTotal = document.getElementById('finalTotalAmount');
-            if (finalTotal) finalTotal.textContent = total + ' ر.س';
+            // استخدام innerHTML بدلاً من textContent لعرض الصورة
+            if (finalTotal) finalTotal.innerHTML = total + ' ' + riyalIcon;
         }
 
         window.removeFromCart = function (id) {
@@ -4752,12 +4781,6 @@
             document.body.style.overflow = 'auto';
         }
 
-        function renderFlowerOptions() {
-            document.getElementById('flowerOptions').innerHTML = singleFlowers.map(f => `
-                <div class="flower-item" onclick="addFlowerToBouquet('${f.id}')">
-                    <img src="${f.img}"><h5>${f.name}</h5><div>${f.price} ر.س</div>
-                </div>`).join('');
-        }
 
         function renderDesignOptions() {
             document.getElementById('designOptions').innerHTML = bouquetDesigns.map((d) => `
@@ -4869,9 +4892,16 @@
             let total = 50;
             list.innerHTML = myCustomBouquet.map(item => {
                 total += (item.price * item.qty);
-                return `<div style="display:flex; justify-content:space-between;"><span>${item.name} x${item.qty}</span><span>${item.price * item.qty} ر.س</span></div>`;
+                // تم استبدال النص بالمتغير هنا
+                return `<div style="display:flex; justify-content:space-between; align-items:center;">
+                    <span>${item.name} x${item.qty}</span>
+                    <span style="display:flex; align-items:center;">${item.price * item.qty} ${riyalIcon}</span>
+                </div>`;
             }).join('');
-            totalEl.textContent = total;
+
+            // استخدام innerHTML لعرض الرقم بجانبه الصورة
+            totalEl.innerHTML = total;
+            // ملاحظة: تأكد في HTML الصفحة أن العنصر totalEl ليس بجانبه كلمة "ر.س" مكتوبة يدوياً وإلا ستظهر مرتين
         }
 
         window.addCustomBouquetToCart = function () {
@@ -5134,6 +5164,15 @@
             modal.classList.remove('show-modal');
             document.body.style.overflow = 'auto';
         };
+
+        function renderFlowerOptions() {
+            document.getElementById('flowerOptions').innerHTML = singleFlowers.map(f => `
+        <div class="flower-item" onclick="addFlowerToBouquet('${f.id}')">
+            <img src="${f.img}">
+            <h5>${f.name}</h5>
+            <div>${f.price} ${riyalIcon}</div> 
+        </div>`).join('');
+        }
 
     </script>
 
