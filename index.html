@@ -790,18 +790,22 @@
         /* تنسيقات الملخص */
         .bouquet-summary {
             background: #fff;
-            padding: 20px;
-            border-radius: 20px;
-            box-shadow: var(--shadow-soft);
-            display: flex;
-            flex-direction: column;
-            height: 400px; /* نفس ارتفاع الكانفاس */
+            padding: 15px;
+            border-radius: 15px;
+            box-shadow: 0 -4px 15px rgba(0,0,0,0.05);
+            margin-bottom: 15px;
+            border: 1px solid #eee;
         }
 
         .selected-list {
-            flex: 1;
-            overflow-y: auto;
-            font-size: 0.9rem;
+            display: block !important; /* التغيير الأساسي: إظهار القائمة */
+            max-height: 120px; /* تحديد ارتفاع أقصى عشان ما تغطي الشاشة */
+            overflow-y: auto; /* إضافة سكرول داخلي لو الورد كتير */
+            background: #f9f9f9;
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            font-size: 0.85rem;
         }
 
         .price-section {
@@ -1475,27 +1479,7 @@
             display: block;
         }
 
-        .btn-quick-add {
-            width: 100%;
-            padding: 12px;
-            background: var(--gradient-primary);
-            color: white;
-            border: none;
-            border-radius: 15px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
 
-            .btn-quick-add:hover {
-                background: var(--gradient-secondary);
-                transform: translateY(-2px);
-                box-shadow: 0 8px 20px rgba(255, 179, 0, 0.3);
-            }
 
         /* ==================== FEATURES ==================== */
         .features-section {
@@ -2138,7 +2122,99 @@
                 right: 10px;
             }
         }
+        /* تصميم الإشعار الجديد */
+        #toast {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            /* يبدأ مخفياً ومرفوعاً للأعلى */
+            transform: translateX(-50%) translateY(-100px) scale(0.9);
+            /* شكل زجاجي وعصري */
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 12px 25px;
+            border-radius: 50px; /* كبسولة كاملة */
+            /* ظل ناعم وفخم */
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 100000;
+            opacity: 0;
+            visibility: hidden;
+            /* هذا هو سر الانسيابية (Slight Bounce Effect) */
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
 
+            /* حالة الظهور */
+            #toast.show {
+                transform: translateX(-50%) translateY(20px) scale(1); /* ينزل للأسفل مع تكبير طبيعي */
+                opacity: 1;
+                visibility: visible;
+            }
+
+            /* تنسيق الأيقونة داخل التوست */
+            #toast i {
+                font-size: 1.2rem;
+                color: #4caf50; /* أخضر نقي لعلامة الصح */
+                background: #e8f5e9;
+                padding: 5px;
+                border-radius: 50%;
+            }
+
+            /* تنسيق النص */
+            #toast span {
+                font-family: 'El Messiri', sans-serif;
+                font-weight: 600;
+                color: #333;
+                font-size: 0.95rem;
+            }
+        /* ==================== زر الإضافة الجديد (ستايل أوتلاين) ==================== */
+        .btn-quick-add {
+            width: 100%;
+            padding: 10px 20px;
+            /* 1. جعل الخلفية شفافة لعمل الاوتلاين */
+            background: transparent;
+            /* 2. لون الخط والحدود (Outline) */
+            color: #e75480; /* نفس درجة الوردي */
+            border: 2px solid #e75480;
+            border-radius: 50px; /* حواف دائرية كاملة لشكل أفخم */
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            /* فليكس لضبط الأيقونة والنص */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            /* أنيميشن ناعم للرجوع للحالة الأصلية */
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+            /* تأثير عند مرور الماوس (يتحول لممتلئ) */
+            .btn-quick-add:hover {
+                background: #e75480;
+                color: white;
+                border-color: #e75480;
+                transform: translateY(-3px); /* يرتفع للأعلى قليلاً */
+                box-shadow: 0 5px 15px rgba(231, 84, 128, 0.3); /* ظل ناعم */
+            }
+
+            /* حل مشكلة التعليق: تأثير لحظة الضغط فقط */
+            .btn-quick-add:active {
+                transform: scale(0.95); /* تصغير الزر لحظياً */
+                background: #c2185b; /* لون أغمق عند الضغط */
+                border-color: #c2185b;
+                box-shadow: none !important; /* إخفاء الظل ليبدو واقعياً */
+            }
+
+            /* هام جداً: إزالة تأثير التركيز اللي بيخلي الزر "معلق" */
+            .btn-quick-add:focus {
+                outline: none; /* إزالة البرواز الأزرق الافتراضي */
+                /* نعيد الألوان لطبيعتها لو المستخدم شال صباعه */
+            }
         /* للشاشات الصغيرة (موبايل) */
         @media (max-width: 768px) {
             .products-grid {
@@ -2771,9 +2847,13 @@
             }
 
             .total-price {
-                font-size: 1.2rem;
+                font-size: 1.1rem;
                 font-weight: 800;
-                color: var(--text-main);
+                color: var(--accent-pink);
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                width: 100%;
             }
 
             .btn-buy-large {
@@ -2782,7 +2862,34 @@
                 font-size: 1rem;
             }
         }
+        /* داخل الميديا كويري للموبايل */
+        @media (max-width: 768px) {
 
+            /* 1. زيادة المساحة السفلية لضمان ظهور السعر فوق الزر */
+            .controls-section {
+                padding-bottom: 150px !important; /* هذه هي المساحة التي ستدفع المحتوى للأعلى */
+            }
+
+            /* 2. تحسين مكان صندوق السعر */
+            .bouquet-summary {
+                margin-bottom: 20px !important;
+                position: relative;
+                z-index: 5; /* لضمان ظهوره بشكل صحيح */
+            }
+
+            /* 3. التأكد من أن الزر ثابت في الأسفل ولا يغطي المحتوى بشكل خاطئ */
+            .btn-buy-large {
+                position: fixed !important;
+                bottom: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                margin: 0 !important;
+                border-radius: 20px 20px 0 0 !important; /* تدوير الحواف العلوية فقط */
+                z-index: 100 !important;
+                padding: 15px !important;
+                box-shadow: 0 -5px 20px rgba(0,0,0,0.1) !important;
+            }
+        }
         /* ==================== تنسيق الديسك توب (عشان ما يضربش) ==================== */
         @media (min-width: 769px) {
             .builder-layout {
@@ -3898,6 +4005,27 @@
             }
         }
 
+        /* تعريف الأنيميشن السلس */
+        @keyframes smoothUp {
+            0% {
+                opacity: 0;
+                transform: translateY(50px); /* يبدأ من أسفل بـ 50 بكسل */
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* الكلاس الذي سنستخدمه */
+        .smooth-entry {
+            animation-name: smoothUp;
+            animation-duration: 0.8s; /* مدة أطول قليلاً للنعومة */
+            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1); /* سر النعومة (توقف تدريجي) */
+            animation-fill-mode: both;
+        }
+
     </style>
 </head>
 <body>
@@ -4065,7 +4193,7 @@
                                         <i class="fas fa-trash"></i>
                                     </button>
                                     <div class="total-price" style="font-size: 1.2rem; font-weight: bold;">
-                                        الإجمالي: <span id="customBouquetTotal" style="color: var(--accent-pink);">0</span> <img src="رابط_اللوجو_هنا" class="currency-icon">
+                                        الإجمالي: <span id="customBouquetTotal" style="color: var(--accent-pink);">0</span> <img src="https://images.seeklogo.com/logo-png/61/2/new-saudi-riyal-2030-logo-png_seeklogo-613034.png" class="currency-icon">
                                     </div>
                                 </div>
                             </div>
@@ -4597,15 +4725,10 @@
                 const delay = index * 0.1;
 
                 return `
-                <div class="product-card animate__animated animate__fadeInUp" style="animation-delay: ${delay}s; animation-duration: 0.6s;">
+<div class="product-card smooth-entry" style="animation-delay: ${delay}s;">
                     <div class="product-badge">جديد</div>
                     <div class="img-container">
                         <img src="${p.image}" alt="${p.name}" onerror="this.src='https://via.placeholder.com/300'">
-                        <div class="product-overlay">
-                            <button class="quick-view-btn" onclick="event.stopPropagation(); openProductPage('${p.id}')">
-                                <i class="fas fa-hand-pointer"></i> اضغط للمعاينة
-                            </button>
-                        </div>
                     </div>
                     <div class="details">
                         <h3>${p.name}</h3>
