@@ -18,6 +18,82 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <style>
 
+        /* تنسيق قائمة نتائج البحث */
+        .search-results-dropdown {
+            position: absolute;
+            top: 100%; /* تظهر أسفل الحقل مباشرة */
+            left: 0;
+            width: 100%;
+            background: white;
+            border-radius: 0 0 15px 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            z-index: 2000;
+            max-height: 300px;
+            overflow-y: auto;
+            display: none; /* مخفية افتراضياً */
+            border: 1px solid #eee;
+            border-top: none;
+        }
+
+        /* العنصر الواحد داخل القائمة */
+        .search-result-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            cursor: pointer;
+            transition: background 0.2s;
+            border-bottom: 1px solid #f9f9f9;
+        }
+
+            .search-result-item:hover {
+                background-color: #fff0f3; /* لون وردي فاتح عند التمرير */
+            }
+
+            .search-result-item img {
+                width: 40px;
+                height: 40px;
+                border-radius: 8px;
+                object-fit: cover;
+                margin-left: 10px; /* مسافة بين الصورة والنص */
+            }
+
+            .search-result-item .info {
+                flex: 1;
+            }
+
+            .search-result-item h4 {
+                font-size: 0.9rem;
+                margin: 0;
+                color: var(--text-main);
+            }
+
+            .search-result-item span {
+                font-size: 0.8rem;
+                color: var(--accent-pink);
+                font-weight: bold;
+            }
+
+        /* تنسيق عداد السلة في الموبايل */
+        .mobile-badge {
+            position: absolute;
+            top: 2px; /* مسافة من أعلى الأيقونة */
+            background-color: #ff4757; /* لون أحمر */
+            color: white;
+            font-size: 0.7rem;
+            font-weight: bold;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex; /* عشان الكلام ييجي في النص */
+            align-items: center;
+            justify-content: center;
+            border: 2px solid white; /* إطار أبيض يفصله عن الأيقونة */
+            z-index: 10;
+            /* تحريكه قليلاً لليسار عشان ييجي فوق طرف السلة */
+            left: 50%;
+            margin-left: 5px;
+        }
+
         /* تنسيق أيقونة العملة */
         .currency-icon {
             width: 20px; /* عرض اللوجو */
@@ -1374,10 +1450,7 @@
             position: relative;
         }
 
-            .product-card:hover {
-                transform: translateY(-10px);
-                box-shadow: var(--shadow-medium);
-            }
+
 
         .product-badge {
             position: absolute;
@@ -1407,10 +1480,7 @@
                 transition: transform 0.6s ease;
             }
 
-        .product-card:hover .img-container img {
-            transform: scale(1.1);
-        }
-
+ 
         /* 1. تعديل الطبقة لتكون شفافة تماماً بدون أي لون أو تغبيش */
         .product-overlay {
             position: absolute;
@@ -1428,10 +1498,6 @@
             z-index: 5;
         }
 
-        /* عند التفاعل (لمس أو ماوس) تظهر الطبقة (التي تحتوي الزر فقط) */
-        .product-card:hover .product-overlay {
-            opacity: 1;
-        }
 
         /* 2. تحسين تصميم الزر ليكون واضحاً جداً فوق الصورة */
         .quick-view-btn {
@@ -1448,17 +1514,8 @@
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        /* حركة ظهور الزر */
-        .product-card:hover .quick-view-btn {
-            transform: translateY(0);
-        }
 
-        /* تأثير عند مرور الماوس على الزر نفسه */
-        .quick-view-btn:hover {
-            background: var(--accent-pink);
-            color: white;
-            transform: scale(1.05);
-        }
+
 
         .details {
             padding: 20px;
@@ -1877,30 +1934,61 @@
             }
         }
 
-        /* ==================== TOAST NOTIFICATION ==================== */
+        /* ==================== تصميم التوست ميسدج الجديد (Pop-up) ==================== */
         #toast {
             position: fixed;
-            top: 30px;
+            top: 25px; /* مسافة من الأعلى */
             left: 50%;
-            transform: translateX(-50%);
-            background: white;
-            padding: 15px 25px;
-            border-radius: 50px;
-            box-shadow: var(--shadow-medium);
+            /* البداية: مرفوع للأعلى ومخفي */
+            transform: translateX(-50%) translateY(-100px) scale(0.8);
+            /* تصميم زجاجي (Glassmorphism) */
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 12px 30px;
+            border-radius: 50px; /* شكل كبسولة */
+            /* ظل ناعم */
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.6);
             display: flex;
             align-items: center;
-            gap: 10px;
-            z-index: 10001;
+            gap: 12px;
+            z-index: 100000; /* فوق كل العناصر */
+
             opacity: 0;
             visibility: hidden;
-            transition: all 0.3s ease;
+            /* أنيميشن مطاطي (Bouncy) */
+            transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
         }
 
+            /* كلاس التفعيل */
             #toast.show {
+                transform: translateX(-50%) translateY(0) scale(1);
                 opacity: 1;
                 visibility: visible;
-                animation: slideDown 0.3s ease;
             }
+
+            /* أيقونة التوست */
+            #toast i {
+                color: #4caf50; /* أخضر نقي لعلامة الصح */
+                font-size: 1.3rem;
+                background: #e8f5e9;
+                width: 30px;
+                height: 30px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 50%;
+            }
+
+            /* نص التوست */
+            #toast span {
+                color: #333;
+                font-weight: 600;
+                font-size: 0.95rem;
+                font-family: 'El Messiri', sans-serif;
+            }
+
 
         @keyframes slideDown {
             from {
@@ -2929,10 +3017,6 @@
                 transition: 0.3s;
             }
 
-                .flower-item:hover {
-                    transform: translateY(-5px);
-                    border-color: var(--accent-pink);
-                }
 
             .summary-section {
                 width: 300px;
@@ -3285,13 +3369,6 @@
             transition: transform 0.3s ease-out, box-shadow 0.3s ease !important;
         }
 
-            .product-card:hover {
-                /* تقليل مسافة الارتفاع من -15px لـ -8px لجعلها أهدأ */
-                transform: translateY(-8px) !important;
-                /* تنعيم الظل ليكون متناسقاً مع الارتفاع الجديد */
-                box-shadow: 0 12px 25px rgba(231, 84, 128, 0.15) !important;
-                z-index: 10;
-            }
 
         /* تنسيق كارت صمم باقتك في الموبايل */
         @media (max-width: 768px) {
@@ -3367,14 +3444,7 @@
             transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease !important;
         }
 
-            .product-card:hover {
-                /* الرقم ده هو اللي بيرفع الكارت.. كل ما تزود السالب (-) يطلع لفوق أكتر */
-                transform: translateY(-15px) !important;
-                /* ظل قوي عشان يعطي إحساس بالارتفاع */
-                box-shadow: 0 20px 40px rgba(231, 84, 128, 0.2) !important;
-                /* عشان يظهر فوق أي حاجة جنبه */
-                z-index: 10;
-            }
+
 
         /* 1. تعديل الطبقة لتكون شفافة تماماً بدون أي لون أو تغبيش */
         .product-overlay {
@@ -3393,10 +3463,7 @@
             z-index: 5;
         }
 
-        /* عند التفاعل (لمس أو ماوس) تظهر الطبقة (التي تحتوي الزر فقط) */
-        .product-card:hover .product-overlay {
-            opacity: 1;
-        }
+
 
         /* 2. تحسين تصميم الزر ليكون واضحاً جداً فوق الصورة */
         .quick-view-btn {
@@ -3414,16 +3481,8 @@
         }
 
         /* حركة ظهور الزر */
-        .product-card:hover .quick-view-btn {
-            transform: translateY(0);
-        }
 
-        /* تأثير عند مرور الماوس على الزر نفسه */
-        .quick-view-btn:hover {
-            background: var(--accent-pink);
-            color: white;
-            transform: scale(1.05);
-        }
+
 
         /* ==================== تحديث شكل الموبايل (أعرض وأقصر) ==================== */
         @media (max-width: 768px) {
@@ -4026,6 +4085,295 @@
             animation-fill-mode: both;
         }
 
+        /* تنسيق شريط الأزرار الموحد */
+        .product-actions-bar {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            margin-top: 30px;
+        }
+
+        /* زر القلب الكبير بجانب زر الشراء */
+        .btn-love-large {
+            width: 60px;
+            height: 56px; /* نفس ارتفاع زر الشراء */
+            border-radius: 15px;
+            border: 2px solid #eee;
+            background: white;
+            color: #ccc;
+            font-size: 1.4rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            flex-shrink: 0; /* يمنع انكماش الزر */
+        }
+
+            .btn-love-large:hover {
+                border-color: #ff4757;
+                color: #ff4757;
+                background: #fff0f3;
+            }
+
+            .btn-love-large.active {
+                background: #ff4757;
+                color: white;
+                border-color: #ff4757;
+                animation: heartPulse 0.6s;
+            }
+
+        /* زر الشراء يأخذ باقي المساحة */
+        .product-actions-bar .btn-buy-large {
+            flex: 1;
+            margin: 0; /* إزالة الهوامش الخارجية */
+            height: 56px; /* توحيد الارتفاع */
+        }
+
+        /* ==================== تنسيق الموبايل (منظم وثابت) ==================== */
+        @media (max-width: 768px) {
+            /* تحسين قائمة المميزات في الموبايل */
+            .features-list {
+                background: #f9f9f9;
+                padding: 15px;
+                border-radius: 15px;
+                margin-bottom: 100px; /* مسافة عشان الأزرار متغطيش عليها */
+            }
+
+                .features-list li {
+                    font-size: 0.9rem;
+                    margin-bottom: 10px;
+                }
+
+            /* تثبيت شريط الأزرار أسفل الشاشة */
+            .product-actions-bar {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                background: white;
+                padding: 15px 20px;
+                box-shadow: 0 -5px 20px rgba(0,0,0,0.1); /* ظل علوي ناعم */
+                z-index: 1000; /* يظهر فوق كل شيء */
+                margin: 0;
+                border-top-left-radius: 20px;
+                border-top-right-radius: 20px;
+            }
+        }
+
+        /* ==================== تحسين صفحة المنتج للموبايل (Mobile Product View) ==================== */
+
+        @media (max-width: 768px) {
+
+            /* 1. ضبط حاوية الصفحة والمحتوى */
+            #fullProductPage {
+                background-color: #ffffff !important;
+                /* إضافة مساحة سفلية كبيرة عشان الأزرار المثبتة متغطي شعلى الكلام */
+                padding-bottom: 120px !important;
+            }
+
+            /* تحويل العرض لعمود واحد بدلاً من عمودين */
+            .product-details-container #fullPageContent {
+                display: flex !important;
+                flex-direction: column !important;
+                gap: 0 !important;
+                padding: 0 !important;
+            }
+
+            /* 2. تنسيق صورة المنتج (كبيرة وواضحة) */
+            .main-img {
+                width: 100% !important;
+                height: 380px !important; /* ارتفاع مناسب للموبايل */
+                border-radius: 0 0 30px 30px !important; /* تدوير الحواف من الأسفل فقط */
+                margin-bottom: 20px !important;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.08) !important;
+                position: relative;
+            }
+
+            /* 3. تنسيق معلومات المنتج (العنوان والسعر) */
+            .product-info {
+                padding: 0 20px !important; /* حشوة جانبية للنصوص */
+            }
+
+                .product-info h2 {
+                    font-size: 1.6rem !important; /* تكبير العنوان */
+                    margin-bottom: 5px !important;
+                }
+
+            .price-box {
+                font-size: 1.8rem !important;
+                margin: 10px 0 !important;
+                color: var(--accent-pink);
+            }
+
+            /* 4. تنسيق الوصف وقائمة المميزات */
+            .description {
+                font-size: 0.95rem !important;
+                color: #666 !important;
+                line-height: 1.6 !important;
+                margin-bottom: 20px !important;
+            }
+
+            .features-list {
+                background-color: #f9f9f9 !important;
+                padding: 15px !important;
+                border-radius: 15px !important;
+                margin-top: 10px !important;
+            }
+
+            /* 5. تثبيت شريط الأزرار أسفل الشاشة (تم الإصلاح) */
+            .product-actions-bar {
+                position: fixed !important;
+                bottom: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                background: white !important;
+                padding: 15px 20px !important;
+                /* ظل علوي لتمييز الشريط */
+                box-shadow: 0 -5px 20px rgba(0,0,0,0.1) !important;
+                /* تنسيق الفليكس لضمان المحاذاة */
+                display: flex !important;
+                flex-direction: row !important; /* سطر واحد إجباري */
+                align-items: center !important;
+                justify-content: space-between !important;
+                gap: 12px !important; /* مسافة بين الزر والقلب */
+
+                z-index: 9999 !important; /* رقم عالي جداً ليظهر فوق كل شيء */
+                /* تدوير الحواف العلوية للشريط */
+                border-radius: 25px 25px 0 0 !important;
+                border-top: 1px solid #eee !important;
+            }
+
+                /* تنسيق زر الشراء الكبير داخل الشريط */
+                .product-actions-bar .btn-buy-large {
+                    flex: 1 !important; /* يأخذ المساحة المتبقية */
+                    margin: 0 !important;
+                    height: 55px !important;
+                    font-size: 1.1rem !important;
+                    border-radius: 15px !important;
+                    box-shadow: 0 5px 15px rgba(231, 84, 128, 0.4) !important;
+                }
+
+
+        }
+
+        /* ==================== الناف بار الأسطوري (نسخة 2.0 - Grid System) ==================== */
+        @media (max-width: 768px) {
+
+            /* 1. الحاوية الأساسية: تثبيت وتأثير الزجاج */
+            .navbar {
+                height: 90px; /* زيادة الارتفاع ليتناسب مع اللوجو الكبير */
+                padding: 0 !important;
+                background: rgba(255, 255, 255, 0.90) !important;
+                backdrop-filter: blur(20px) !important;
+                border-bottom: 1px solid rgba(0,0,0,0.05);
+                display: flex;
+                align-items: center;
+            }
+
+            /* 2. تقسيم العناصر بنظام الشبكة (Grid) */
+            .nav-content {
+                display: grid !important;
+                /* تقسيم المساحة: اللوجو (تلقائي) | السيرش (الباقي) | زر الثيم (تلقائي) */
+                grid-template-columns: auto 1fr auto !important;
+                align-items: center !important;
+                gap: 15px !important;
+                width: 100%;
+                padding: 0 15px !important;
+            }
+
+            /* 3. اللوجو (تم تكبيره) */
+            .logo-link {
+                display: flex;
+                align-items: center;
+            }
+
+            .site-logo {
+                height: 70px !important; /* تكبير اللوجو ليصبح 70 بكسل */
+                width: auto !important;
+                object-fit: contain; /* الحفاظ على أبعاد الصورة */
+                filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+            }
+
+            /* 4. السيرش بار (كومباكت وأنيق) */
+            .nav-center {
+                margin: 0 !important;
+                display: block !important;
+                width: 100%;
+            }
+
+            .nav-link {
+                display: none !important;
+            }
+
+            .search-box {
+                width: 100% !important;
+                max-width: 100% !important;
+                height: 40px;
+                position: relative;
+            }
+
+                .search-box input {
+                    width: 100% !important;
+                    height: 100% !important;
+                    background: #f3f5f7 !important;
+                    border: 1px solid transparent !important;
+                    border-radius: 12px !important;
+                    padding: 0 10px 0 35px !important;
+                    font-size: 0.8rem !important;
+                    color: #333;
+                    transition: all 0.3s ease;
+                    text-align: right;
+                }
+
+                    .search-box input:focus {
+                        background: #ffffff !important;
+                        border-color: var(--accent-pink) !important;
+                        box-shadow: 0 4px 15px rgba(231, 84, 128, 0.1);
+                    }
+
+                .search-box button {
+                    position: absolute;
+                    left: 8px !important;
+                    top: 50% !important;
+                    transform: translateY(-50%) !important;
+                    background: none;
+                    border: none;
+                    color: #999;
+                    padding: 0;
+                    font-size: 1rem !important;
+                }
+
+            /* 5. زر الثيم (الوضع الليلي) */
+            .theme-toggle-btn {
+                width: 42px;
+                height: 42px;
+                background: white !important;
+                border: 1px solid #eee !important;
+                border-radius: 12px !important;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+                color: #333;
+                transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+                margin: 0 !important;
+            }
+
+                .theme-toggle-btn:active {
+                    transform: scale(0.9);
+                    background: #f9f9f9 !important;
+                }
+
+                .theme-toggle-btn i {
+                    font-size: 1.2rem;
+                    color: var(--text-main);
+                }
+
+            .cart-btn {
+                display: none !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -4051,7 +4399,7 @@
     <nav class="navbar">
         <div class="container nav-content">
             <a href="#" class="logo-link" onclick="goHome()">
-                <img src="https://i.postimg.cc/fRhb2V5f/file.jpg" alt="Bloom Elite" class="site-logo">
+                <img src="https://i.postimg.cc/43TtXHVJ/b6021d2c-01cd-479a-82aa-74411a18fe96.png" alt="Bloom Elite" class="site-logo">
             </a>
 
             <div class="nav-center">
@@ -4059,12 +4407,8 @@
                 <div class="search-box">
                     <input type="text" id="searchInput" placeholder="ابحث عن الورود التي تحبها...">
                     <button><i class="fas fa-search"></i></button>
+                    <div id="searchResults" class="search-results-dropdown"></div>
                 </div>
-            </div>
-
-            <button class="theme-toggle-btn" onclick="toggleTheme()">
-                <i class="fas fa-moon"></i>
-            </button>
 
             <div class="cart-btn" onclick="openCart()">
                 <i class="fas fa-shopping-basket"></i>
@@ -4112,266 +4456,74 @@
     </section>
 
     <main class="container">
-        <div class="products-grid" id="productsContainer">
 
-            <div id="bouquetBuilderModal" class="modal">
-                <div class="modal-content">
-                    <span class="close-btn" onclick="closeBouquetBuilder()">&times;</span>
-
-                    <div class="modal-header">
-                        <h2><i class="fas fa-wand-magic-sparkles"></i> صمم باقتك</h2>
-                    </div>
-
-                    <div class="builder-layout">
-
-                        <div class="visual-section">
-                            <div class="sticky-preview-container">
-                                <div id="bouquetCanvas" class="bouquet-canvas">
-                                    <img src="https://i.postimg.cc/C1cjzMZt/ablabla.png" class="wrapping-paper-bg" id="mainWrapperImg" alt="تغليف">
-
-                                    <div id="flowersOverlay" class="flowers-overlay"></div>
-
-                                    <div id="giftCardOverlay" class="gift-card-container hidden" style="width: 110px; height: 70px; top: 30px; font-size: 0.9rem;">
-                                        <span id="giftCardTextDisplay"
-                                              أحبك>رسالة مخصصة 🤍</span>
-                                    </div>
+        <div id="bouquetBuilderModal" class="modal">
+            <div class="modal-content">
+                <span class="close-btn" onclick="closeBouquetBuilder()">×</span>
+                <div class="modal-header">
+                    <h2><i class="fas fa-wand-magic-sparkles"></i> صمم باقتك</h2>
+                </div>
+                <div class="builder-layout">
+                    <div class="visual-section">
+                        <div class="sticky-preview-container">
+                            <div id="bouquetCanvas" class="bouquet-canvas">
+                                <img src="https://i.postimg.cc/C1cjzMZt/ablabla.png" class="wrapping-paper-bg" id="mainWrapperImg" alt="تغليف">
+                                <div id="flowersOverlay" class="flowers-overlay"></div>
+                                <div id="giftCardOverlay" class="gift-card-container hidden" style="width: 110px; height: 70px; top: 30px; font-size: 0.9rem;">
+                                    <span id="giftCardTextDisplay">أحبك</span>
                                 </div>
                             </div>
                         </div>
-
-                        <div class="controls-section" style="flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 20px;">
-
-                            <div class="flowers-scroll-container">
-                                <h4><i class="fas fa-spa"></i> اضغط لإضافة الورد:</h4>
-                                <div id="flowerOptions" class="horizontal-scroll-list"></div>
-                            </div>
-
-                            <div class="style-scroll-container">
-                                <h4><i class="fas fa-shopping-bag"></i> اختر البوكيه:</h4>
-                                <div class="horizontal-scroll-list" style="display: flex; gap: 10px; padding-bottom: 5px; overflow-x: auto;">
-                                    <div onclick="document.getElementById('mainWrapperImg').src='https://i.postimg.cc/C1cjzMZt/ablabla.png'" class="design-item" style="border-radius: 10px; width: 60px; height: 60px;">
-                                        <img src="https://i.postimg.cc/C1cjzMZt/ablabla.png" style="border-radius: 8px;">
-                                    </div>
-                                    <div onclick="document.getElementById('mainWrapperImg').src='https://www.pngmart.com/files/7/Bouquet-Transparent-Background.png'" class="design-item" style="border-radius: 10px; width: 60px; height: 60px;">
-                                        <img src="https://www.pngmart.com/files/7/Bouquet-Transparent-Background.png" style="border-radius: 8px;">
-                                    </div>
-                                    <div onclick="document.getElementById('mainWrapperImg').src='https://png.pngtree.com/png-clipart/20230427/original/pngtree-empty-flower-basket-png-image_9113670.png'" class="design-item" style="border-radius: 10px; width: 60px; height: 60px;">
-                                        <img src="https://png.pngtree.com/png-clipart/20230427/original/pngtree-empty-flower-basket-png-image_9113670.png" style="border-radius: 8px;">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="style-scroll-container">
-                                <h4><i class="fas fa-shapes"></i> طريقة تنسيق الورد:</h4>
-                                <div id="designOptions" class="horizontal-scroll-list designs-list"></div>
-                            </div>
-
-                            <div class="message-container" style="background: white; padding: 15px; border-radius: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.03);">
-                                <div style="margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px dashed #eee;">
-                                    <h4 style="margin-bottom: 8px; font-size: 0.9rem;"><i class="fas fa-palette"></i> لون الكارت:</h4>
-                                    <div class="color-options" style="display: flex; gap: 10px;">
-                                        <div onclick="document.querySelectorAll('.color-circle').forEach(c=>c.style.border='1px solid #ddd'); this.style.border='2px solid var(--accent-pink)'; document.getElementById('giftCardOverlay').style.background = '#fffdf9'; document.getElementById('giftCardOverlay').style.color = '#4a4a4a';" class="color-circle" style="width: 30px; height: 30px; background: #fffdf9; border: 1px solid #ddd; border-radius: 50%; cursor: pointer;"></div>
-                                        <div onclick="document.querySelectorAll('.color-circle').forEach(c=>c.style.border='1px solid #ddd'); this.style.border='2px solid var(--accent-pink)'; document.getElementById('giftCardOverlay').style.background = '#ffccd5'; document.getElementById('giftCardOverlay').style.color = '#5a0000';" class="color-circle" style="width: 30px; height: 30px; background: #ffccd5; border: 1px solid #ddd; border-radius: 50%; cursor: pointer;"></div>
-                                        <div onclick="document.querySelectorAll('.color-circle').forEach(c=>c.style.border='1px solid #ddd'); this.style.border='2px solid var(--accent-pink)'; document.getElementById('giftCardOverlay').style.background = '#2c2c2c'; document.getElementById('giftCardOverlay').style.color = '#ffffff';" class="color-circle" style="width: 30px; height: 30px; background: #2c2c2c; border: 1px solid #ddd; border-radius: 50%; cursor: pointer;"></div>
-                                        <div onclick="document.querySelectorAll('.color-circle').forEach(c=>c.style.border='1px solid #ddd'); this.style.border='2px solid var(--accent-pink)'; document.getElementById('giftCardOverlay').style.background = '#e0c3ff'; document.getElementById('giftCardOverlay').style.color = '#2d004d';" class="color-circle" style="width: 30px; height: 30px; background: #e0c3ff; border: 1px solid #ddd; border-radius: 50%; cursor: pointer;"></div>
-                                    </div>
-                                </div>
-                                <h4 style="margin-bottom: 5px;"><i class="fas fa-pen-nib"></i> رسالة الكارت:</h4>
-                                <textarea id="giftMessageInput" placeholder="اكتب رسالتك هنا..." style="width:100%; padding:10px; border-radius:10px; border:1px solid #ddd; resize:none; font-family: inherit;" oninput="updateGiftCard(this.value)"></textarea>
-                            </div>
-
-                            <button class="btn-download" onclick="downloadBouquetImage()" style="background: #6c5ce7; color: white; width: 100%; padding: 10px; border-radius: 15px; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 15px; box-shadow: 0 4px 10px rgba(108, 92, 231, 0.2);">
-                                <i class="fas fa-camera"></i> حفظ صورة الباقة
-                            </button>
-
-                            <div class="bouquet-summary" style="background: #fff; padding: 15px; border-radius: 15px; border: 1px solid #eee;">
-                                <div id="selectedFlowersList" class="selected-list">
-                                    <p class="empty-msg">الباقة فارغة..</p>
-                                </div>
-                                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px; padding-top: 10px; border-top: 1px dashed #eee;">
-                                    <button class="btn-reset" onclick="resetBouquet()" style="color: #ff4d4d; border-color: #ff4d4d;">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                    <div class="total-price" style="font-size: 1.2rem; font-weight: bold;">
-                                        الإجمالي: <span id="customBouquetTotal" style="color: var(--accent-pink);">0</span> <img src="https://images.seeklogo.com/logo-png/61/2/new-saudi-riyal-2030-logo-png_seeklogo-613034.png" class="currency-icon">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <button class="btn-buy-large" onclick="addCustomBouquetToCart()" style="width: 100%; padding: 18px; font-size: 1.1rem; box-shadow: 0 8px 25px rgba(231, 84, 128, 0.4); margin-bottom: 20px;">
-                                إضافة للسلة <i class="fas fa-check" style="margin-right: 8px;"></i>
-                            </button>
-
+                    </div>
+                    <div class="controls-section" style="flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 20px;">
+                        <div class="flowers-scroll-container">
+                            <h4><i class="fas fa-spa"></i> اضغط لإضافة الورد:</h4>
+                            <div id="flowerOptions" class="horizontal-scroll-list"></div>
                         </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="product-card custom-bouquet-card legendary-card">
-                <div class="legendary-badge">
-                    <i class="fas fa-star"></i> تجربة حصرية
-                </div>
-
-                <div class="glow-effect"></div>
-
-                <div class="img-container" onclick="openBouquetBuilder()" style="cursor: pointer;">
-                    <img src="https://i.postimg.cc/ZngmNk37/unnamed.png" alt="صمم باقتك">
-                </div>
-
-                <div class="details">
-                    <h3><i class="fas fa-crown" style="color: #ffd700; margin-left: 5px;"></i> اصنع باقة أحلامك</h3>
-                    <p>لا تختار المعتاد.. صمم باقة فريدة تعبر عنك تماماً.</p>
-
-                    <button class="btn-legendary-action" onclick="event.stopPropagation(); openBouquetBuilder()" style="position: relative; z-index: 10;">
-                        <span class="btn-text">ابدأ التصميم الآن</span>
-                        <span class="btn-icon"><i class="fas fa-wand-magic-sparkles"></i></span>
-                    </button>
-                </div>
-            </div>
-
-            <div class="product-card">
-                <div class="product-badge">الأكثر مبيعاً</div>
-                <div class="img-container" onclick="viewProduct(1)">
-                    <img src="https://png.pngtree.com/png-vector/20250302/ourmid/pngtree-bouquet-of-fresh-red-roses-with-green-leaves-and-a-romantic-png-image_15690722.png" alt="باقة الورود الحمراء">
-                    <div class="product-overlay">
-                        <button class="quick-view-btn" onclick="viewProduct(1)">
-                            <i class="fas fa-eye"></i> معاينة سريعة
+                        <div class="style-scroll-container">
+                            <h4><i class="fas fa-shopping-bag"></i> اختر البوكيه:</h4>
+                            <div id="designOptions" class="horizontal-scroll-list designs-list"></div>
+                        </div>
+                        <div class="message-container" style="background: white; padding: 15px; border-radius: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.03);">
+                            <div style="margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px dashed #eee;">
+                                <h4 style="margin-bottom: 8px; font-size: 0.9rem;"><i class="fas fa-palette"></i> لون الكارت:</h4>
+                                <div class="color-options" style="display: flex; gap: 10px;">
+                                    <div onclick="document.querySelectorAll('.color-circle').forEach(c=>c.style.border='1px solid #ddd'); this.style.border='2px solid var(--accent-pink)'; document.getElementById('giftCardOverlay').style.background = '#fffdf9'; document.getElementById('giftCardOverlay').style.color = '#4a4a4a';" class="color-circle" style="width: 30px; height: 30px; background: #fffdf9; border: 1px solid #ddd; border-radius: 50%; cursor: pointer;"></div>
+                                    <div onclick="document.querySelectorAll('.color-circle').forEach(c=>c.style.border='1px solid #ddd'); this.style.border='2px solid var(--accent-pink)'; document.getElementById('giftCardOverlay').style.background = '#ffccd5'; document.getElementById('giftCardOverlay').style.color = '#5a0000';" class="color-circle" style="width: 30px; height: 30px; background: #ffccd5; border: 1px solid #ddd; border-radius: 50%; cursor: pointer;"></div>
+                                    <div onclick="document.querySelectorAll('.color-circle').forEach(c=>c.style.border='1px solid #ddd'); this.style.border='2px solid var(--accent-pink)'; document.getElementById('giftCardOverlay').style.background = '#2c2c2c'; document.getElementById('giftCardOverlay').style.color = '#ffffff';" class="color-circle" style="width: 30px; height: 30px; background: #2c2c2c; border: 1px solid #ddd; border-radius: 50%; cursor: pointer;"></div>
+                                    <div onclick="document.querySelectorAll('.color-circle').forEach(c=>c.style.border='1px solid #ddd'); this.style.border='2px solid var(--accent-pink)'; document.getElementById('giftCardOverlay').style.background = '#e0c3ff'; document.getElementById('giftCardOverlay').style.color = '#2d004d';" class="color-circle" style="width: 30px; height: 30px; background: #e0c3ff; border: 1px solid #ddd; border-radius: 50%; cursor: pointer;"></div>
+                                </div>
+                            </div>
+                            <h4 style="margin-bottom: 5px;"><i class="fas fa-pen-nib"></i> رسالة الكارت:</h4>
+                            <textarea id="giftMessageInput" placeholder="اكتب رسالتك هنا..." style="width:100%; padding:10px; border-radius:10px; border:1px solid #ddd; resize:none; font-family: inherit;" oninput="updateGiftCard(this.value)"></textarea>
+                        </div>
+                        <button class="btn-download" onclick="downloadBouquetImage()" style="background: #6c5ce7; color: white; width: 100%; padding: 10px; border-radius: 15px; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 15px; box-shadow: 0 4px 10px rgba(108, 92, 231, 0.2);">
+                            <i class="fas fa-camera"></i> حفظ صورة الباقة
                         </button>
-                    </div>
-                </div>
-                <div class="details">
-                    <h3>باقة الورود الحمراء </h3>
-                    <span class="price">350 ر.س</span>
-                    <div class="buttons-wrapper">
-                        <button class="btn-quick-add" onclick="addToCart(1)">
-                            أضف <i class="fas fa-cart-plus"></i>
-                        </button>
-                        <button class="btn-love" onclick="toggleWishlist(1, this)">
-                            <i class="far fa-heart"></i>
+                        <div class="bouquet-summary" style="background: #fff; padding: 15px; border-radius: 15px; border: 1px solid #eee;">
+                            <div id="selectedFlowersList" class="selected-list">
+                                <p class="empty-msg">الباقة فارغة..</p>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px; padding-top: 10px; border-top: 1px dashed #eee;">
+                                <button class="btn-reset" onclick="resetBouquet()" style="color: #ff4d4d; border-color: #ff4d4d;">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                                <div class="total-price" style="font-size: 1.2rem; font-weight: bold;">
+                                    الإجمالي: <span id="customBouquetTotal" style="color: var(--accent-pink);">0</span> <img src="https://images.seeklogo.com/logo-png/61/2/new-saudi-riyal-2030-logo-png_seeklogo-613034.png" class="currency-icon">
+                                </div>
+                            </div>
+                        </div>
+                        <button class="btn-buy-large" onclick="addCustomBouquetToCart()" style="width: 100%; padding: 18px; font-size: 1.1rem; box-shadow: 0 8px 25px rgba(231, 84, 128, 0.4); margin-bottom: 20px;">
+                            إضافة للسلة <i class="fas fa-check" style="margin-right: 8px;"></i>
                         </button>
                     </div>
                 </div>
             </div>
-
-            <div class="product-card">
-                <div class="product-badge">جديد</div>
-                <div class="img-container" onclick="viewProduct(2)">
-                    <img src="https://i.postimg.cc/2SLtyb0W/63464346.png" alt="توليب الربيع الملون">
-                    <div class="product-overlay">
-                        <button class="quick-view-btn" onclick="viewProduct(2)">
-                            <i class="fas fa-eye"></i> معاينة سريعة
-                        </button>
-                    </div>
-                </div>
-                <div class="details">
-                    <h3>توليب الربيع الملون</h3>
-                    <span class="price">280 ج.م</span>
-                    <div class="buttons-wrapper">
-                        <button class="btn-quick-add" onclick="addToCart(2)">
-                            أضف <i class="fas fa-cart-plus"></i>
-                        </button>
-                        <button class="btn-love" onclick="toggleWishlist(2, this)">
-                            <i class="far fa-heart"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="product-card">
-                <div class="product-badge">فاخر</div>
-                <div class="img-container" onclick="viewProduct(3)">
-                    <img src="https://i.postimg.cc/bvcLC6pL/14626579-706c-40c4-80c4-1f3331dd8295.jpg" alt="زنابق بيضاء نقية">
-                    <div class="product-overlay">
-                        <button class="quick-view-btn" onclick="viewProduct(3)">
-                            <i class="fas fa-eye"></i> معاينة سريعة
-                        </button>
-                    </div>
-                </div>
-                <div class="details">
-                    <h3>زنابق بيضاء نقية</h3>
-                    <span class="price">420 ج.م</span>
-                    <div class="buttons-wrapper">
-                        <button class="btn-quick-add" onclick="addToCart(3)">
-                            أضف <i class="fas fa-cart-plus"></i>
-                        </button>
-                        <button class="btn-love" onclick="toggleWishlist(3, this)">
-                            <i class="far fa-heart"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="product-card">
-                <div class="product-badge">مميز</div>
-                <div class="img-container" onclick="viewProduct(4)">
-                    <img src="https://i.postimg.cc/pTdjq8hd/ea7ddeb1-62dc-4480-b966-b9ea52810739.jpg" alt="باقة حب">
-                    <div class="product-overlay">
-                        <button class="quick-view-btn" onclick="viewProduct(4)">
-                            <i class="fas fa-eye"></i> معاينة سريعة
-                        </button>
-                    </div>
-                </div>
-                <div class="details">
-                    <h3>باقة حب مميزة</h3>
-                    <span class="price">550 ج.م</span>
-                    <div class="buttons-wrapper">
-                        <button class="btn-quick-add" onclick="addToCart(4)">
-                            أضف <i class="fas fa-cart-plus"></i>
-                        </button>
-                        <button class="btn-love" onclick="toggleWishlist(4, this)">
-                            <i class="far fa-heart"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="product-card">
-                <div class="img-container" onclick="viewProduct(5)">
-                    <img src="https://i.postimg.cc/G26QZq15/lyblyblb.png" alt="ورود وردية رومانسية">
-                    <div class="product-overlay">
-                        <button class="quick-view-btn" onclick="viewProduct(5)">
-                            <i class="fas fa-eye"></i> معاينة سريعة
-                        </button>
-                    </div>
-                </div>
-                <div class="details">
-                    <h3>ورود وردية رومانسية</h3>
-                    <span class="price">320 ج.م</span>
-                    <div class="buttons-wrapper">
-                        <button class="btn-quick-add" onclick="addToCart(5)">
-                            أضف <i class="fas fa-cart-plus"></i>
-                        </button>
-                        <button class="btn-love" onclick="toggleWishlist(5, this)">
-                            <i class="far fa-heart"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="product-card">
-                <div class="img-container" onclick="viewProduct(6)">
-                    <img src="https://png.pngtree.com/png-vector/20250512/ourmid/pngtree-elegant-white-tulip-bouquet-png-image_16204877.png" alt="توليب أبيض وأنيق">
-                    <div class="product-overlay">
-                        <button class="quick-view-btn" onclick="viewProduct(6)">
-                            <i class="fas fa-eye"></i> معاينة سريعة
-                        </button>
-                    </div>
-                </div>
-                <div class="details">
-                    <h3>توليب أبيض وأنيق</h3>
-                    <span class="price">290 ج.م</span>
-                    <div class="buttons-wrapper">
-                        <button class="btn-quick-add" onclick="addToCart(6)">
-                            أضف <i class="fas fa-cart-plus"></i>
-                        </button>
-                        <button class="btn-love" onclick="toggleWishlist(6, this)">
-                            <i class="far fa-heart"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
         </div>
+
+        <div class="products-grid" id="productsContainer">
+        </div>
+
     </main>
 
     <!-- Features Section -->
@@ -4578,10 +4730,13 @@
             <i class="fas fa-home"></i>
             <span>الرئيسية</span>
         </a>
-        <a href="#" class="nav-item" onclick="openCart()">
+
+        <a href="#" class="nav-item" onclick="openCart()" style="position: relative;">
             <i class="fas fa-shopping-basket"></i>
             <span>السلة</span>
+            <span class="mobile-badge" style="display: none;">0</span>
         </a>
+
         <a href="javascript:void(0)" class="nav-item" onclick="openWishlist()">
             <i class="fas fa-heart"></i>
             <span>المفضلة</span>
@@ -4726,12 +4881,14 @@
 
                 return `
 <div class="product-card smooth-entry" style="animation-delay: ${delay}s;">
-                    <div class="product-badge">جديد</div>
-                    <div class="img-container">
-                        <img src="${p.image}" alt="${p.name}" onerror="this.src='https://via.placeholder.com/300'">
-                    </div>
-                    <div class="details">
-                        <h3>${p.name}</h3>
+    <div class="product-badge">جديد</div>
+    
+    <div class="img-container" onclick="openProductPage('${p.id}')" style="cursor: pointer;">
+        <img src="${p.image}" alt="${p.name}" onerror="this.src='https://via.placeholder.com/300'">
+    </div>
+
+    <div class="details">
+        <h3>${p.name}</h3>
 <span class="price">${p.price} ${riyalIcon}</span>
                         <div class="buttons-wrapper">
                             <button class="btn-quick-add" onclick="event.stopPropagation(); addToCart('${p.id}')">
@@ -4771,8 +4928,6 @@
         </div>
         <div class="product-info">
             <h2 style="color: var(--text-main);">${p.name}</h2>
-// داخل content.innerHTML
-// ابحث عن div class="price-box" وغيره ليصبح:
 <div class="price-box">
     ${p.price} ${riyalIcon}
 </div>
@@ -4781,29 +4936,23 @@
                 ${productDescription}
             </p>
 
-            <ul class="features-list">
+<ul class="features-list">
                 <li><i class="fas fa-truck"></i> توصيل سريع خلال ساعتين</li>
                 <li><i class="fas fa-leaf"></i> زهور طبيعية 100%</li>
                 <li><i class="fas fa-gift"></i> تغليف مجاني فاخر</li>
             </ul>
-            
-            <div class="mobile-sticky-action">
+
+            <div class="product-actions-bar">
                 <button class="btn-buy-large" onclick="addToCart('${p.id}')">
                     إضافة للسلة <i class="fas fa-cart-plus" style="margin-right:8px;"></i>
                 </button>
-                <button class="btn-love ${heartClass}" onclick="toggleWishlist('${p.id}', this)">
+                
+                <button class="btn-love-large ${heartClass}" onclick="toggleWishlist('${p.id}', this)">
                     <i class="${heartIcon}"></i>
                 </button>
             </div>
-            <div class="buttons-wrapper" style="margin-top: 30px;">
-                <button class="btn-buy-large" onclick="addToCart('${p.id}')">
-                    إضافة للسلة <i class="fas fa-cart-plus" style="margin-right:8px;"></i>
-                </button>
-                <button class="btn-love ${heartClass}" style="width:60px; height:60px;" onclick="toggleWishlist('${p.id}', this)">
-                    <i class="${heartIcon}"></i>
-                </button>
-            </div>
-        </div>`;
+
+        </div>`; 
 
             page.style.display = 'block';
             document.body.style.overflow = 'hidden';
@@ -4837,43 +4986,81 @@
             triggerPetals();
         }
 
-        function updateCart() {
-            localStorage.setItem('flowerCart', JSON.stringify(cart));
-            const badge = document.querySelector('.badge');
-            if (badge) badge.textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
-
-            const container = document.getElementById('cartItemsContainer');
+        window.filterByCategory = function (cat) {
+            const container = document.getElementById('productsContainer');
             if (!container) return;
 
-            let total = 0;
-            container.innerHTML = cart.map(item => {
-                total += (item.price * item.quantity);
-                return `<div style="display:flex; justify-content:space-between; padding:10px; border-bottom:1px solid #eee; align-items:center;">
-                    <div style="flex:1">
-                        <div style="font-weight:bold; font-size:0.9rem;">${item.name}</div>
-                        <div style="font-size:0.8rem; color:#888;">العدد: ${item.quantity}</div>
-                    </div>
-                    <div style="font-weight:bold; color:var(--accent-pink); display:flex; align-items:center;">
-                        ${item.price * item.quantity} ${riyalIcon}
-                    </div>
-                    <button onclick="removeFromCart('${item.id}')" style="margin-right:10px; color:red; background:none; border:none; cursor:pointer;"><i class="fas fa-trash"></i></button>
-                </div>`;
+            // تنشيط زر الفلتر المختار
+            const cards = document.querySelectorAll('.cat-card');
+            cards.forEach(c => c.classList.remove('active'));
+            if (event && event.currentTarget) event.currentTarget.classList.add('active');
+
+            // تصفية المنتجات بناءً على الفئة
+            const filtered = cat === 'all' ? products : products.filter(p => p.category === cat);
+
+            // تجهيز كود HTML (نبدأ بكارت التصميم الخاص)
+            let htmlContent = `
+        <div class="product-card custom-bouquet-card legendary-card" onclick="openBouquetBuilder()" style="cursor: pointer;">
+            <div class="legendary-badge"><i class="fas fa-star"></i> تجربة حصرية</div>
+            <div class="glow-effect"></div>
+            <div class="img-container">
+                <img src="https://i.postimg.cc/ZngmNk37/unnamed.png" alt="صمم باقتك">
+            </div>
+            <div class="details">
+                <h3><i class="fas fa-crown" style="color: #ffd700;"></i> اصنع باقة أحلامك</h3>
+                <p>صمم باقة فريدة تعبر عنك.</p>
+                <button class="btn-legendary-action" onclick="event.stopPropagation(); openBouquetBuilder()">
+                    <span class="btn-text">ابدأ التصميم</span>
+                    <span class="btn-icon"><i class="fas fa-wand-magic-sparkles"></i></span>
+                </button>
+            </div>
+        </div>
+    `;
+
+            // إذا لم توجد منتجات من الفاير بيس
+            if (filtered.length === 0 && cat !== 'all') {
+                htmlContent += `<div style="grid-column: 1/-1; text-align: center; padding: 20px;">لا توجد منتجات في هذا القسم حالياً</div>`;
+            }
+
+            // إضافة منتجات الفاير بيس
+            htmlContent += filtered.map((p, index) => {
+                const isLiked = wishlist.includes(p.id);
+                const heartClass = isLiked ? 'active' : '';
+                const heartIcon = isLiked ? 'fas fa-heart' : 'far fa-heart';
+                const delay = index * 0.1; // تأخير بسيط للأنيميشن
+
+                return `
+        <div class="product-card smooth-entry" style="animation-delay: ${delay}s;">
+            <div class="product-badge">جديد</div>
+            
+            <div class="img-container" onclick="openProductPage('${p.id}')" style="cursor: pointer;">
+                <img src="${p.image}" alt="${p.name}" loading="lazy" onerror="this.src='https://via.placeholder.com/300'">
+                <div class="product-overlay">
+                    <button class="quick-view-btn" onclick="event.stopPropagation(); openProductPage('${p.id}')">
+                        <i class="fas fa-eye"></i> معاينة
+                    </button>
+                </div>
+            </div>
+
+            <div class="details">
+                <h3>${p.name}</h3>
+                <span class="price">${p.price} ${riyalIcon}</span>
+                
+                <div class="buttons-wrapper">
+                    <button class="btn-quick-add" onclick="event.stopPropagation(); addToCart('${p.id}')">
+                        أضف <i class="fas fa-cart-plus"></i>
+                    </button>
+                    
+                    <button class="btn-love ${heartClass}" onclick="event.stopPropagation(); toggleWishlist('${p.id}', this)">
+                        <i class="${heartIcon}"></i>
+                    </button>
+                </div>
+            </div>
+        </div>`;
             }).join('');
 
-            const totalEl = document.getElementById('cartTotal');
-            // استخدام innerHTML بدلاً من textContent لعرض الصورة
-            if (totalEl) totalEl.innerHTML = total + ' ' + riyalIcon;
-
-            const finalTotal = document.getElementById('finalTotalAmount');
-            // استخدام innerHTML بدلاً من textContent لعرض الصورة
-            if (finalTotal) finalTotal.innerHTML = total + ' ' + riyalIcon;
-        }
-
-        window.removeFromCart = function (id) {
-            cart = cart.filter(item => item.id != id);
-            updateCart();
-            const container = document.getElementById('cartItemsContainer');
-            if (container && container.innerHTML !== "") updateCart();
+            // وضع المحتوى النهائي في الصفحة
+            container.innerHTML = htmlContent;
         }
 
         window.openBouquetBuilder = function () {
@@ -5077,21 +5264,38 @@
         }
 
         // ==================== 6. أدوات وتشغيل ====================
+
+        // دالة التوست المعدلة (4 ثواني)
         function showToast(msg) {
             const t = document.getElementById('toast');
             document.getElementById('toastMessage').textContent = msg;
+
+            // إظهار الرسالة
             t.classList.add('show');
-            setTimeout(() => t.classList.remove('show'), 3000);
+
+            // إخفاء الرسالة بعد 4000 ميلي ثانية (4 ثواني)
+            setTimeout(() => {
+                t.classList.remove('show');
+            }, 4000);
         }
 
         window.openCart = function () {
             document.getElementById('cartSidebar').classList.add('active');
             document.querySelector('.overlay').classList.add('active');
             updateCart();
+
+            // إخفاء زر الواتساب عند فتح السلة
+            const whatsappBtn = document.querySelector('.whatsapp-float');
+            if (whatsappBtn) whatsappBtn.style.display = 'none';
         }
+
         window.closeCart = function () {
             document.getElementById('cartSidebar').classList.remove('active');
             document.querySelector('.overlay').classList.remove('active');
+
+            // إعادة إظهار زر الواتساب عند إغلاق السلة
+            const whatsappBtn = document.querySelector('.whatsapp-float');
+            if (whatsappBtn) whatsappBtn.style.display = 'flex';
         }
 
         window.openCheckout = function () {
@@ -5106,7 +5310,7 @@
             document.querySelector('.categories-section').style.display = 'none';
             document.querySelector('.products-grid').style.display = 'none';
 
-            closeCart(); // إغلاق السلة الجانبية
+            closeCart(); // إغلاق السلة الجانبية (وهذا سيعيد زر الواتساب للظهور تلقائياً)
 
             // تعبئة ملخص الطلب
             const container = document.getElementById('checkoutItemsList');
@@ -5296,6 +5500,137 @@
             <div>${f.price} ${riyalIcon}</div> 
         </div>`).join('');
         }
+
+        function updateCart() {
+    // 1. حفظ السلة في المتصفح
+    localStorage.setItem('flowerCart', JSON.stringify(cart));
+    
+    // 2. حساب إجمالي عدد المنتجات (الرقم اللي بيظهر فوق الأيقونة)
+    const totalQty = cart.reduce((sum, item) => sum + parseInt(item.quantity || 1), 0);
+
+    // تحديث العداد في الكمبيوتر
+    const desktopBadge = document.querySelector('.cart-btn .badge');
+    if (desktopBadge) {
+        desktopBadge.textContent = totalQty;
+        desktopBadge.style.display = totalQty > 0 ? 'flex' : 'none';
+    }
+
+    // تحديث العداد في الموبايل
+    const mobileBadge = document.querySelector('.mobile-badge');
+    if (mobileBadge) {
+        mobileBadge.textContent = totalQty;
+        mobileBadge.style.display = totalQty > 0 ? 'flex' : 'none';
+    }
+
+    // 3. تحديث محتوى السلة (القائمة الجانبية)
+    const container = document.getElementById('cartItemsContainer');
+    if (!container) return; // لو السلة مش موجودة في الصفحة نوقف الدالة
+
+    let total = 0;
+    
+    // رسم العناصر داخل السلة
+    container.innerHTML = cart.map(item => {
+        const itemPrice = parseFloat(item.price); // ضمان أن السعر رقم
+        const itemQty = parseInt(item.quantity);  // ضمان أن الكمية رقم
+        const itemTotal = itemPrice * itemQty;
+        
+        total += itemTotal;
+
+        return `
+        <div style="display:flex; justify-content:space-between; padding:10px; border-bottom:1px solid #eee; align-items:center;">
+            <div style="flex:1">
+                <div style="font-weight:bold; font-size:0.9rem;">${item.name}</div>
+                <div style="font-size:0.8rem; color:#888;">العدد: ${itemQty}</div>
+            </div>
+            <div style="font-weight:bold; color:var(--accent-pink); display:flex; align-items:center;">
+                ${itemTotal} ${riyalIcon}
+            </div>
+            <button onclick="removeFromCart('${item.id}')" style="margin-right:10px; color:red; background:none; border:none; cursor:pointer;">
+                <i class="fas fa-trash"></i>
+            </button>
+        </div>`;
+    }).join('');
+
+    // 4. تحديث السعر الإجمالي النهائي
+    const totalEl = document.getElementById('cartTotal');
+    if (totalEl) totalEl.innerHTML = total + ' ' + riyalIcon;
+
+    const finalTotal = document.getElementById('finalTotalAmount');
+    if (finalTotal) finalTotal.innerHTML = total + ' ' + riyalIcon;
+        }
+
+        // تعريف عناصر البحث
+        const searchInput = document.getElementById('searchInput');
+        const searchResults = document.getElementById('searchResults');
+
+        // الاستماع لحدث الكتابة
+        searchInput.addEventListener('input', function (e) {
+            const term = e.target.value.toLowerCase().trim();
+            searchResults.innerHTML = ''; // مسح النتائج القديمة
+
+            // إذا كان الحقل فارغاً، أخف القائمة
+            if (term.length === 0) {
+                searchResults.style.display = 'none';
+                return;
+            }
+
+            // فلترة المنتجات (اسم المنتج يحتوي على النص المكتوب)
+            const filteredProducts = products.filter(p => p.name.toLowerCase().includes(term));
+
+            if (filteredProducts.length > 0) {
+                searchResults.style.display = 'block';
+
+                filteredProducts.forEach(p => {
+                    const item = document.createElement('div');
+                    item.className = 'search-result-item';
+                    // عرض الصورة والاسم والسعر
+                    item.innerHTML = `
+                <img src="${p.image}" onerror="this.src='https://via.placeholder.com/50'">
+                <div class="info">
+                    <h4>${p.name}</h4>
+                    <span>${p.price} ر.س</span>
+                </div>
+            `;
+
+                    // عند الضغط على النتيجة، افتح صفحة المنتج
+                    item.onclick = () => {
+                        openProductPage(p.id);
+                        searchResults.style.display = 'none'; // إخفاء القائمة
+                        searchInput.value = ''; // تفريغ الحقل (اختياري)
+                    };
+
+                    searchResults.appendChild(item);
+                });
+            } else {
+                // إذا لم توجد نتائج
+                searchResults.style.display = 'block';
+                searchResults.innerHTML = '<div style="padding:10px; text-align:center; color:#999;">لا توجد نتائج</div>';
+            }
+        });
+
+        // إخفاء القائمة عند الضغط في أي مكان خارج البحث
+        document.addEventListener('click', function (e) {
+            if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
+                searchResults.style.display = 'none';
+            }
+        });
+
+        // دالة حذف منتج من السلة
+        window.removeFromCart = function (id) {
+            // 1. البحث عن مكان المنتج في المصفوفة
+            const index = cart.findIndex(item => item.id == id);
+
+            if (index > -1) {
+                // 2. حذف المنتج
+                cart.splice(index, 1);
+
+                // 3. تحديث واجهة السلة وحفظ التغييرات
+                updateCart();
+
+                // 4. إظهار رسالة تأكيد
+                showToast('تم حذف المنتج من السلة 🗑️');
+            }
+        };
 
     </script>
 
