@@ -4374,6 +4374,198 @@
                 display: none !important;
             }
         }
+
+        /* ==================== تحسينات صفحة الشحن وملخص السلة ==================== */
+
+        /* 1. الحاوية الرئيسية (تأثير الزجاج) */
+        #checkoutSection .product-details-container {
+            background: rgba(255, 255, 255, 0.85) !important;
+            backdrop-filter: blur(15px) !important;
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.05);
+            border-radius: 25px;
+            padding: 40px !important;
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        /* 2. تحسين حقول الإدخال (Inputs) */
+        #orderForm input,
+        #orderForm select,
+        #orderForm textarea {
+            background-color: #f8f9fa !important;
+            border: 2px solid #f0f0f0 !important;
+            border-radius: 12px !important;
+            padding: 15px !important;
+            font-size: 0.95rem !important;
+            transition: all 0.3s ease;
+            color: var(--text-main);
+        }
+
+            /* تأثير عند الكتابة داخل الحقل */
+            #orderForm input:focus,
+            #orderForm select:focus,
+            #orderForm textarea:focus {
+                background-color: #fff !important;
+                border-color: var(--accent-pink) !important;
+                box-shadow: 0 0 0 4px rgba(231, 84, 128, 0.1) !important;
+                transform: translateY(-2px);
+            }
+
+        /* تسميات الحقول (Labels) */
+        #orderForm label {
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 8px;
+            display: block;
+            font-size: 0.9rem;
+        }
+
+        /* 3. تحسين ملخص السلة (الكارت الجانبي) */
+        .checkout-summary-side {
+            background: #fff !important;
+            border-radius: 20px !important;
+            padding: 25px !important;
+            border: 1px solid #f0f0f0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.03) !important;
+            position: sticky;
+            top: 110px; /* تثبيت الملخص أثناء النزول في الكمبيوتر */
+            height: fit-content;
+        }
+
+            /* عنوان الملخص */
+            .checkout-summary-side h3 {
+                font-size: 1.2rem;
+                color: var(--text-main);
+                border-bottom: 2px dashed #eee;
+                padding-bottom: 15px;
+                margin-bottom: 20px;
+                text-align: center;
+            }
+
+        /* 4. تحسين قائمة المنتجات داخل الملخص */
+        #checkoutItemsList {
+            background: #fafafa;
+            border-radius: 12px;
+            padding: 10px;
+            margin-bottom: 20px;
+            max-height: 350px;
+            overflow-y: auto;
+        }
+
+            /* تصميم العنصر الواحد في القائمة */
+            #checkoutItemsList > div {
+                background: white;
+                padding: 12px;
+                margin-bottom: 8px;
+                border-radius: 10px;
+                border: 1px solid #eee;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                transition: 0.2s;
+                font-size: 0.9rem;
+            }
+
+                #checkoutItemsList > div:last-child {
+                    margin-bottom: 0;
+                }
+
+                #checkoutItemsList > div:hover {
+                    transform: translateX(-3px);
+                    border-color: var(--accent-pink);
+                }
+
+        /* 5. تحسين عرض الإجمالي */
+        #checkoutSection .total-price-box {
+            background: linear-gradient(135deg, #fce4ec 0%, #fff 100%);
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid rgba(231, 84, 128, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 800;
+            font-size: 1.2rem;
+            color: var(--text-main);
+        }
+
+        #finalTotalAmount {
+            color: var(--accent-pink);
+            font-size: 1.4rem;
+        }
+
+        /* 6. تحسين زر التأكيد (واتساب) */
+        .btn-whatsapp-confirm {
+            background: linear-gradient(45deg, #25d366, #128c7e);
+            color: white;
+            font-weight: 800;
+            font-size: 1.1rem;
+            padding: 18px;
+            border-radius: 15px;
+            border: none;
+            width: 100%;
+            cursor: pointer;
+            box-shadow: 0 10px 25px rgba(37, 211, 102, 0.3);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+            .btn-whatsapp-confirm:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 15px 35px rgba(37, 211, 102, 0.4);
+            }
+
+        /* أنيميشن الظهور */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ==================== تعديلات الموبايل ==================== */
+        @media (max-width: 768px) {
+            #checkoutSection .product-details-container {
+                padding: 20px !important;
+                gap: 20px !important;
+            }
+
+            .checkout-summary-side {
+                position: relative;
+                top: 0;
+                margin-top: 20px;
+                order: -1; /* رفع الملخص فوق الفورم في الموبايل ليرى العميل المبلغ أولاً */
+            }
+
+            /* جعل زر التأكيد يطفو أسفل الشاشة في الموبايل */
+            .btn-whatsapp-confirm {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                border-radius: 20px 20px 0 0;
+                z-index: 1000;
+                padding: 15px;
+                margin: 0;
+                box-shadow: 0 -5px 20px rgba(0,0,0,0.1);
+            }
+
+            /* مسافة سفلية عشان الزر العائم */
+            #checkoutSection {
+                padding-bottom: 80px;
+            }
+        }
+
     </style>
 </head>
 <body>
@@ -5616,21 +5808,21 @@
         });
 
         // دالة حذف منتج من السلة
-        window.removeFromCart = function (id) {
-            // 1. البحث عن مكان المنتج في المصفوفة
-            const index = cart.findIndex(item => item.id == id);
-
-            if (index > -1) {
-                // 2. حذف المنتج
-                cart.splice(index, 1);
-
-                // 3. تحديث واجهة السلة وحفظ التغييرات
-                updateCart();
-
-                // 4. إظهار رسالة تأكيد
-                showToast('تم حذف المنتج من السلة 🗑️');
-            }
-        };
+window.removeFromCart = function(id) {
+    // 1. البحث عن مكان المنتج في المصفوفة
+    const index = cart.findIndex(item => item.id == id);
+    
+    if (index > -1) {
+        // 2. حذف المنتج
+        cart.splice(index, 1);
+        
+        // 3. تحديث واجهة السلة وحفظ التغييرات
+        updateCart();
+        
+        // 4. إظهار رسالة تأكيد
+        showToast('تم حذف المنتج من السلة 🗑️');
+    }
+};
 
     </script>
 
