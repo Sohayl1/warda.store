@@ -816,6 +816,7 @@
         .flower-on-canvas {
             position: absolute;
             z-index: 10;
+            width: 130px !important;
             touch-action: none; /* يمنع المتصفح من عمل زوم أو سكرول على الوردة */
             user-select: none; /* يمنع تحديد الصورة كنص */
             -webkit-user-select: none;
@@ -4876,9 +4877,12 @@
                 <div class="footer-col">
                     <h4 style="color: white;">تواصل معنا</h4>
                     <div class="social-links">
-                        <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
                         <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
-                        <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+
+                        <a href="https://www.tiktok.com/@roose.garden9" class="social-icon" target="_blank">
+                            <i class="fab fa-tiktok"></i>
+                        </a>
+
                         <a href="https://wa.me/966546458993" class="social-icon" target="_blank">
                             <i class="fab fa-whatsapp"></i>
                         </a>
@@ -4994,11 +4998,35 @@
 
         // ==================== بيانات مصمم الباقات ====================
         const singleFlowers = [
-            { id: 'f1', name: 'جوري أحمر', price: 25, img: 'https://i.postimg.cc/2SLtyb0W/63464346.png' },
-            { id: 'f2', name: 'جوري وردي', price: 20, img: 'https://i.postimg.cc/VLVQZcSm/unnamed.png' },
-            { id: 'f3', name: 'توليب أبيض', price: 35, img: 'https://i.postimg.cc/Hn4yB2W7/bsybsyb.png' },
-            { id: 'f4', name: 'زنبق ليلي', price: 50, img: 'https://i.postimg.cc/NG20kbC2/854901fd-aa80-4b94-821b-8e14b66750bb.png' },
-            { id: 'f5', name: 'يوسفي للتزيين', price: 15, img: 'https://i.postimg.cc/G26QZq15/lyblyblb.png' }
+            // --- الورود القديمة (5) ---
+            { id: 'f1', name: 'بيبي روز', img: 'https://i.postimg.cc/Gp4QmMcj/Chat-GPT-Image-Jan-28-2026-05-44-49-PM.png' },
+            { id: 'f2', name: 'بيبي روز', img: 'https://i.postimg.cc/W13m59JD/Chat-GPT-Image-Jan-28-2026-05-53-04-PM.png' },
+            { id: 'f3', name: 'بيبي روز', img: 'https://i.postimg.cc/tJpWWDjb/Chat-GPT-Image-Jan-28-2026-05-50-23-PM.png' },
+            { id: 'f4', name: 'بيبي روز', img: 'https://i.postimg.cc/tJpWWDjb/Chat-GPT-Image-Jan-28-2026-05-50-23-PM.png' },
+            { id: 'f5', name: 'بيبي روز', img: 'https://i.postimg.cc/g2XXw1ZH/Chat-GPT-Image-Jan-28-2026-05-58-19-PM.png' },
+
+            // --- الورود الجديدة (20 خانة فارغة) ---
+
+            { id: 'f6', name: 'بيبي روز', img: 'https://i.postimg.cc/qR0z5RZQ/Chat-GPT-Image-Jan-28-2026-05-34-08-PM.png' },
+            { id: 'f7', name: 'بيبي روز', img: 'https://i.postimg.cc/tJ479cbZ/Chat-GPT-Image-Jan-28-2026-05-38-00-PM.png' },
+            { id: 'f8', name: 'ديانتوس', img: 'https://i.postimg.cc/6QXq1qym/Chat-GPT-Image-Jan-28-2026-07-08-05-PM.png' },
+            { id: 'f9', name: 'بيبي روز', img: 'https://i.postimg.cc/N0qDJ68K/Chat-GPT-Image-Jan-28-2026-07-17-35-PM.png' },
+            { id: 'f10', name: '', img: '  ' },
+
+            { id: 'f11', name: 'اسم الوردة 11', img: '' },
+            { id: 'f12', name: 'اسم الوردة 12', img: 'https://i.postimg.cc/xCZsnwD1/Chat-GPT-Image-Jan-28-2026-06-51-56-PM.png' },
+            { id: 'f13', name: 'اسم الوردة 13', img: 'https://i.postimg.cc/Fs0QCZ37/Chat-GPT-Image-Jan-28-2026-05-53-58-PM.png' },
+            { id: 'f15', name: 'اسم الوردة 15', img: 'https://i.postimg.cc/d1gz4k0g/Chat-GPT-Image-Jan-28-2026-05-34-58-PM.png' },
+
+            { id: 'f16', name: 'اسم الوردة 16', img: 'https://i.postimg.cc/6qzc3qPK/Chat-GPT-Image-Jan-28-2026-07-59-01-PM.png' },
+            { id: 'f17', name: 'اسم الوردة 17', img: 'https://i.postimg.cc/JnL55jVr/Chat-GPT-Image-Jan-28-2026-07-59-53-PM.png' },
+            { id: 'f18', name: 'اسم الوردة 18', img: 'https://i.postimg.cc/tJRdLy4S/Chat-GPT-Image-Jan-28-2026-08-01-23-PM.png' },
+            { id: 'f19', name: 'اسم الوردة 19', img: 'https://i.postimg.cc/N0qDJ68K/Chat-GPT-Image-Jan-28-2026-07-17-35-PM.png' },
+            { id: 'f20', name: 'اسم الوردة 20', img: 'https://i.postimg.cc/W4MMztDr/Chat-GPT-Image-Jan-28-2026-07-38-53-PM.png' },
+
+            { id: 'f21', name: 'اسم الوردة 21', img: 'https://i.postimg.cc/XJ49C3dX/Chat-GPT-Image-Jan-28-2026-07-43-00-PM.png' },
+            { id: 'f22', name: 'اسم الوردة 22', img: 'https://i.postimg.cc/gj0RgDgN/Chat-GPT-Image-Jan-28-2026-07-57-53-PM.png' },
+            { id: 'f23', name: 'اسم الوردة 23', img: 'https://i.postimg.cc/0ySSXrC8/Chat-GPT-Image-Jan-28-2026-07-56-01-PM.png' },
         ];
 
         const bouquetDesigns = [
@@ -5364,7 +5392,11 @@
             const img = document.createElement('img');
             img.src = flower.img;
             img.className = 'flower-on-canvas';
-            img.style.position = 'absolute'; img.style.width = '80px';
+
+            // 👇👇👇 هنا التعديل: غير الرقم ده (كان 80 وخليناه 130) 👇👇👇
+            img.style.width = '130px';
+            // 👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆
+
             img.style.transition = 'transform 0.3s ease'; img.style.zIndex = '10';
             img.style.cursor = 'grab'; img.style.touchAction = 'none';
 
@@ -5399,26 +5431,35 @@
         function updateBouquetSummary() {
             const list = document.getElementById('selectedFlowersList');
             const totalEl = document.getElementById('customBouquetTotal');
+            // هذا السطر لإخفاء أيقونة العملة الكبيرة بجانب الإجمالي
+            const currencyIconEl = document.querySelector('.bouquet-summary .currency-icon');
+
             if (!list) return;
+
+            // إخفاء أيقونة العملة بجانب الإجمالي
+            if (currencyIconEl) currencyIconEl.style.display = 'none';
 
             if (myCustomBouquet.length === 0) {
                 list.innerHTML = '<p class="empty-msg">الباقة فارغة..</p>';
                 totalEl.textContent = '0';
                 return;
             }
-            let total = 50;
+
+            let total = 0; // ممكن تخليها 0 لو مش عايز سعر أساسي
+
             list.innerHTML = myCustomBouquet.map(item => {
                 total += (item.price * item.qty);
-                // تم استبدال النص بالمتغير هنا
+
+                // هنا التعديل: شلنا الجزء الخاص بالسعر والعملة
                 return `<div style="display:flex; justify-content:space-between; align-items:center;">
                     <span>${item.name} x${item.qty}</span>
-                    <span style="display:flex; align-items:center;">${item.price * item.qty} ${riyalIcon}</span>
-                </div>`;
+                    </div>`;
             }).join('');
 
-            // استخدام innerHTML لعرض الرقم بجانبه الصورة
             totalEl.innerHTML = total;
-            // ملاحظة: تأكد في HTML الصفحة أن العنصر totalEl ليس بجانبه كلمة "ر.س" مكتوبة يدوياً وإلا ستظهر مرتين
+
+            // إخفاء كلمة "الإجمالي" والرقم بالكامل لو تحب (اختياري)
+            // document.querySelector('.total-price').style.display = 'none';
         }
 
         window.addCustomBouquetToCart = function () {
@@ -5704,8 +5745,7 @@
         <div class="flower-item" onclick="addFlowerToBouquet('${f.id}')">
             <img src="${f.img}">
             <h5>${f.name}</h5>
-            <div>${f.price} ${riyalIcon}</div> 
-        </div>`).join('');
+            </div>`).join('');
         }
 
         function updateCart() {
