@@ -2,6 +2,16 @@
 <html lang="ar" dir="rtl">
 <head>
 
+    <meta property="og:site_name" content="Rose Garden">
+    <meta property="og:title" content="Rose Garden | باقات ورد فاخرة وتوصيل سريع في جدة">
+    <meta property="og:description" content="اكتشف أجمل باقات الورد الطبيعي والهدايا المميزة. خدمة صمم باقتك بنفسك، وتوصيل فوري خلال ساعتين.">
+    <meta property="og:image" content="https://i.postimg.cc/fRhb2V5f/file.jpg">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://berlingoestore.com">
+    <meta itemprop="name" content="Rose Garden | متجر ورود">
+    <meta itemprop="description" content="أفضل متجر لبيع الورود وتصميم الباقات في جدة.">
+    <meta itemprop="image" content="https://i.postimg.cc/fRhb2V5f/file.jpg">
+
     <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Marhey:wght@400;500&display=swap" rel="stylesheet">
 
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
@@ -359,7 +369,7 @@
         .btn-legendary:focus, .btn-buy-large:focus, .btn-quick-add:focus {
             box-shadow: 0 10px 25px rgba(221, 36, 118, 0.5) !important; /* نرجع الظل الأصلي بتاعها */
         }
-      
+
 
         /* حاوية الأزرار (عشان ييجوا جنب بعض) */
         .buttons-wrapper {
@@ -1007,8 +1017,13 @@
         }
 
         @keyframes floatBlob {
-            0% { transform: translate(0, 0) scale(1); }
-            100% { transform: translate(50px, 50px) scale(1.1); }
+            0% {
+                transform: translate(0, 0) scale(1);
+            }
+
+            100% {
+                transform: translate(50px, 50px) scale(1.1);
+            }
         }
 
         /* ==================== RESET & BASE ==================== */
@@ -1480,7 +1495,7 @@
                 transition: transform 0.6s ease;
             }
 
- 
+
         /* 1. تعديل الطبقة لتكون شفافة تماماً بدون أي لون أو تغبيش */
         .product-overlay {
             position: absolute;
@@ -3635,34 +3650,35 @@
             .product-card .img-container {
                 height: 220px !important;
             }
-                    .product-card .img-container img {
-                        /* 1. contain: تجعل الصورة تظهر بالكامل دون قص (تصغير الزووم) */
-                        object-fit: contain !important;
-                        /* 2. padding: يضيف مسافة بيضاء حول الوردة ليبدو حجمها أصغر */
-                        padding: 8px !important;
-                        /* تحسين جودة العرض */
-                        width: 100% !important;
-                        height: 100% !important;
-                    }
-                /* 5. ضغط التفاصيل الداخلية لتوفير مساحة */
-                .product-card .details {
-                    padding: 8px 5px !important;
-                    gap: 3px !important;
-                }
 
-                /* 6. تصغير الخطوط لتتناسب مع العرض الجديد */
-                .product-card h3 {
-                    font-size: 0.8rem !important;
-                    margin-bottom: 2px !important;
-                    white-space: nowrap;
-                    overflow: hidden;
-                    text-overflow: ellipsis;
+                .product-card .img-container img {
+                    /* 1. contain: تجعل الصورة تظهر بالكامل دون قص (تصغير الزووم) */
+                    object-fit: contain !important;
+                    /* 2. padding: يضيف مسافة بيضاء حول الوردة ليبدو حجمها أصغر */
+                    padding: 8px !important;
+                    /* تحسين جودة العرض */
+                    width: 100% !important;
+                    height: 100% !important;
                 }
+            /* 5. ضغط التفاصيل الداخلية لتوفير مساحة */
+            .product-card .details {
+                padding: 8px 5px !important;
+                gap: 3px !important;
+            }
 
-                .product-card .price {
-                    font-size: 0.9rem !important;
-                    margin-bottom: 5px !important;
-                }
+            /* 6. تصغير الخطوط لتتناسب مع العرض الجديد */
+            .product-card h3 {
+                font-size: 0.8rem !important;
+                margin-bottom: 2px !important;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            .product-card .price {
+                font-size: 0.9rem !important;
+                margin-bottom: 5px !important;
+            }
 
             /* 7. الأزرار */
             .buttons-wrapper {
@@ -4253,8 +4269,6 @@
                     border-radius: 15px !important;
                     box-shadow: 0 5px 15px rgba(231, 84, 128, 0.4) !important;
                 }
-
-
         }
 
         /* ==================== الناف بار الأسطوري (نسخة 2.0 - Grid System) ==================== */
@@ -4565,7 +4579,6 @@
                 padding-bottom: 80px;
             }
         }
-
     </style>
 </head>
 <body>
@@ -4793,7 +4806,7 @@
                         </div>
                         <div class="text">
                             <h3>توصيل سريع ومجاني</h3>
-                            <p>نوصلك في أي وقت، مع خدمة التوصيل المجاني للطلبات فوق 300 جنيه</p>
+                            <p>نوصلك في أي وقت</p>
                         </div>
                     </div>
 
