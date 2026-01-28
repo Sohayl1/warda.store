@@ -28,6 +28,52 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <style>
 
+        /* تنسيق أزرار التحكم بالكمية في السلة */
+        .qty-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 8px;
+            background: #f9f9f9;
+            padding: 4px 8px;
+            border-radius: 20px;
+            width: fit-content;
+        }
+
+        .qty-btn {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 1px solid #e75480; /* نفس لون الـ accent-pink */
+            background: white;
+            color: #e75480;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.2s ease;
+            padding: 0;
+        }
+
+            .qty-btn:hover {
+                background: #e75480;
+                color: white;
+            }
+
+            .qty-btn:active {
+                transform: scale(0.9);
+            }
+
+        .qty-text {
+            font-weight: bold;
+            font-size: 0.95rem;
+            color: var(--text-main);
+            min-width: 20px;
+            text-align: center;
+        }
+
         /* تنسيق قائمة نتائج البحث */
         .search-results-dropdown {
             position: absolute;
@@ -4706,19 +4752,7 @@
                         <button class="btn-download" onclick="downloadBouquetImage()" style="background: #6c5ce7; color: white; width: 100%; padding: 10px; border-radius: 15px; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 15px; box-shadow: 0 4px 10px rgba(108, 92, 231, 0.2);">
                             <i class="fas fa-camera"></i> حفظ صورة الباقة
                         </button>
-                        <div class="bouquet-summary" style="background: #fff; padding: 15px; border-radius: 15px; border: 1px solid #eee;">
-                            <div id="selectedFlowersList" class="selected-list">
-                                <p class="empty-msg">الباقة فارغة..</p>
-                            </div>
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px; padding-top: 10px; border-top: 1px dashed #eee;">
-                                <button class="btn-reset" onclick="resetBouquet()" style="color: #ff4d4d; border-color: #ff4d4d;">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                                <div class="total-price" style="font-size: 1.2rem; font-weight: bold;">
-                                    الإجمالي: <span id="customBouquetTotal" style="color: var(--accent-pink);">0</span> <img src="https://images.seeklogo.com/logo-png/61/2/new-saudi-riyal-2030-logo-png_seeklogo-613034.png" class="currency-icon">
-                                </div>
-                            </div>
-                        </div>
+                      
                         <button class="btn-buy-large" onclick="addCustomBouquetToCart()" style="width: 100%; padding: 18px; font-size: 1.1rem; box-shadow: 0 8px 25px rgba(231, 84, 128, 0.4); margin-bottom: 20px;">
                             إضافة للسلة <i class="fas fa-check" style="margin-right: 8px;"></i>
                         </button>
@@ -4998,35 +5032,34 @@
 
         // ==================== بيانات مصمم الباقات ====================
         const singleFlowers = [
-            // --- الورود القديمة (5) ---
+            // --- الورود القديمة ---
             { id: 'f1', name: 'بيبي روز', img: 'https://i.postimg.cc/Gp4QmMcj/Chat-GPT-Image-Jan-28-2026-05-44-49-PM.png' },
             { id: 'f2', name: 'بيبي روز', img: 'https://i.postimg.cc/W13m59JD/Chat-GPT-Image-Jan-28-2026-05-53-04-PM.png' },
             { id: 'f3', name: 'بيبي روز', img: 'https://i.postimg.cc/tJpWWDjb/Chat-GPT-Image-Jan-28-2026-05-50-23-PM.png' },
-            { id: 'f4', name: 'بيبي روز', img: 'https://i.postimg.cc/tJpWWDjb/Chat-GPT-Image-Jan-28-2026-05-50-23-PM.png' },
+            // تم حذف f4 (صورة متكررة)
             { id: 'f5', name: 'بيبي روز', img: 'https://i.postimg.cc/g2XXw1ZH/Chat-GPT-Image-Jan-28-2026-05-58-19-PM.png' },
 
-            // --- الورود الجديدة (20 خانة فارغة) ---
-
+            // --- الورود الجديدة ---
             { id: 'f6', name: 'بيبي روز', img: 'https://i.postimg.cc/qR0z5RZQ/Chat-GPT-Image-Jan-28-2026-05-34-08-PM.png' },
             { id: 'f7', name: 'بيبي روز', img: 'https://i.postimg.cc/tJ479cbZ/Chat-GPT-Image-Jan-28-2026-05-38-00-PM.png' },
             { id: 'f8', name: 'ديانتوس', img: 'https://i.postimg.cc/6QXq1qym/Chat-GPT-Image-Jan-28-2026-07-08-05-PM.png' },
             { id: 'f9', name: 'بيبي روز', img: 'https://i.postimg.cc/N0qDJ68K/Chat-GPT-Image-Jan-28-2026-07-17-35-PM.png' },
-            { id: 'f10', name: '', img: '  ' },
+            // تم حذف f10 (بدون صورة)
+            // تم حذف f11 (بدون صورة)
 
-            { id: 'f11', name: 'اسم الوردة 11', img: '' },
-            { id: 'f12', name: 'اسم الوردة 12', img: 'https://i.postimg.cc/xCZsnwD1/Chat-GPT-Image-Jan-28-2026-06-51-56-PM.png' },
-            { id: 'f13', name: 'اسم الوردة 13', img: 'https://i.postimg.cc/Fs0QCZ37/Chat-GPT-Image-Jan-28-2026-05-53-58-PM.png' },
-            { id: 'f15', name: 'اسم الوردة 15', img: 'https://i.postimg.cc/d1gz4k0g/Chat-GPT-Image-Jan-28-2026-05-34-58-PM.png' },
+            { id: 'f12', name: 'وردة جميلة', img: 'https://i.postimg.cc/xCZsnwD1/Chat-GPT-Image-Jan-28-2026-06-51-56-PM.png' },
+            { id: 'f13', name: 'وردة جميلة', img: 'https://i.postimg.cc/Fs0QCZ37/Chat-GPT-Image-Jan-28-2026-05-53-58-PM.png' },
+            { id: 'f15', name: 'وردة جميلة', img: 'https://i.postimg.cc/d1gz4k0g/Chat-GPT-Image-Jan-28-2026-05-34-58-PM.png' },
 
-            { id: 'f16', name: 'اسم الوردة 16', img: 'https://i.postimg.cc/6qzc3qPK/Chat-GPT-Image-Jan-28-2026-07-59-01-PM.png' },
-            { id: 'f17', name: 'اسم الوردة 17', img: 'https://i.postimg.cc/JnL55jVr/Chat-GPT-Image-Jan-28-2026-07-59-53-PM.png' },
-            { id: 'f18', name: 'اسم الوردة 18', img: 'https://i.postimg.cc/tJRdLy4S/Chat-GPT-Image-Jan-28-2026-08-01-23-PM.png' },
-            { id: 'f19', name: 'اسم الوردة 19', img: 'https://i.postimg.cc/N0qDJ68K/Chat-GPT-Image-Jan-28-2026-07-17-35-PM.png' },
-            { id: 'f20', name: 'اسم الوردة 20', img: 'https://i.postimg.cc/W4MMztDr/Chat-GPT-Image-Jan-28-2026-07-38-53-PM.png' },
+            { id: 'f16', name: 'وردة جميلة', img: 'https://i.postimg.cc/6qzc3qPK/Chat-GPT-Image-Jan-28-2026-07-59-01-PM.png' },
+            { id: 'f17', name: 'وردة جميلة', img: 'https://i.postimg.cc/JnL55jVr/Chat-GPT-Image-Jan-28-2026-07-59-53-PM.png' },
+            { id: 'f18', name: 'وردة جميلة', img: 'https://i.postimg.cc/tJRdLy4S/Chat-GPT-Image-Jan-28-2026-08-01-23-PM.png' },
+            // تم حذف f19 (صورة متكررة لـ f9)
+            { id: 'f20', name: 'وردة جميلة', img: 'https://i.postimg.cc/W4MMztDr/Chat-GPT-Image-Jan-28-2026-07-38-53-PM.png' },
 
-            { id: 'f21', name: 'اسم الوردة 21', img: 'https://i.postimg.cc/XJ49C3dX/Chat-GPT-Image-Jan-28-2026-07-43-00-PM.png' },
-            { id: 'f22', name: 'اسم الوردة 22', img: 'https://i.postimg.cc/gj0RgDgN/Chat-GPT-Image-Jan-28-2026-07-57-53-PM.png' },
-            { id: 'f23', name: 'اسم الوردة 23', img: 'https://i.postimg.cc/0ySSXrC8/Chat-GPT-Image-Jan-28-2026-07-56-01-PM.png' },
+            { id: 'f21', name: 'وردة جميلة', img: 'https://i.postimg.cc/XJ49C3dX/Chat-GPT-Image-Jan-28-2026-07-43-00-PM.png' },
+            { id: 'f22', name: 'وردة جميلة', img: 'https://i.postimg.cc/gj0RgDgN/Chat-GPT-Image-Jan-28-2026-07-57-53-PM.png' },
+            { id: 'f23', name: 'وردة جميلة', img: 'https://i.postimg.cc/0ySSXrC8/Chat-GPT-Image-Jan-28-2026-07-56-01-PM.png' },
         ];
 
         const bouquetDesigns = [
@@ -5748,63 +5781,93 @@
             </div>`).join('');
         }
 
+        // ==================== دالة تغيير الكمية (جديدة) ====================
+        window.changeQuantity = function (id, delta) {
+            const item = cart.find(i => i.id == id);
+            if (!item) return;
+
+            // تعديل الكمية
+            item.quantity = (parseInt(item.quantity) || 0) + delta;
+
+            // إذا أصبحت الكمية 0 أو أقل، نحذف المنتج
+            if (item.quantity <= 0) {
+                removeFromCart(id);
+            } else {
+                updateCart(); // تحديث السلة بالأرقام الجديدة
+                // showToast('تم تحديث الكمية'); // (اختياري: يمكنك تفعيلها لو أردت إشعاراً مع كل ضغطة)
+            }
+        };
+
+        // ==================== دالة تحديث السلة (المعدلة) ====================
         function updateCart() {
-    // 1. حفظ السلة في المتصفح
-    localStorage.setItem('flowerCart', JSON.stringify(cart));
-    
-    // 2. حساب إجمالي عدد المنتجات (الرقم اللي بيظهر فوق الأيقونة)
-    const totalQty = cart.reduce((sum, item) => sum + parseInt(item.quantity || 1), 0);
+            // 1. حفظ السلة في المتصفح
+            localStorage.setItem('flowerCart', JSON.stringify(cart));
 
-    // تحديث العداد في الكمبيوتر
-    const desktopBadge = document.querySelector('.cart-btn .badge');
-    if (desktopBadge) {
-        desktopBadge.textContent = totalQty;
-        desktopBadge.style.display = totalQty > 0 ? 'flex' : 'none';
-    }
+            // 2. حساب إجمالي عدد المنتجات
+            const totalQty = cart.reduce((sum, item) => sum + parseInt(item.quantity || 1), 0);
 
-    // تحديث العداد في الموبايل
-    const mobileBadge = document.querySelector('.mobile-badge');
-    if (mobileBadge) {
-        mobileBadge.textContent = totalQty;
-        mobileBadge.style.display = totalQty > 0 ? 'flex' : 'none';
-    }
+            // تحديث العداد في الكمبيوتر
+            const desktopBadge = document.querySelector('.cart-btn .badge');
+            if (desktopBadge) {
+                desktopBadge.textContent = totalQty;
+                desktopBadge.style.display = totalQty > 0 ? 'flex' : 'none';
+            }
 
-    // 3. تحديث محتوى السلة (القائمة الجانبية)
-    const container = document.getElementById('cartItemsContainer');
-    if (!container) return; // لو السلة مش موجودة في الصفحة نوقف الدالة
+            // تحديث العداد في الموبايل
+            const mobileBadge = document.querySelector('.mobile-badge');
+            if (mobileBadge) {
+                mobileBadge.textContent = totalQty;
+                mobileBadge.style.display = totalQty > 0 ? 'flex' : 'none';
+            }
 
-    let total = 0;
-    
-    // رسم العناصر داخل السلة
-    container.innerHTML = cart.map(item => {
-        const itemPrice = parseFloat(item.price); // ضمان أن السعر رقم
-        const itemQty = parseInt(item.quantity);  // ضمان أن الكمية رقم
-        const itemTotal = itemPrice * itemQty;
-        
-        total += itemTotal;
+            // 3. تحديث محتوى السلة (القائمة الجانبية)
+            const container = document.getElementById('cartItemsContainer');
+            if (!container) return;
 
-        return `
-        <div style="display:flex; justify-content:space-between; padding:10px; border-bottom:1px solid #eee; align-items:center;">
+            let total = 0;
+
+            // رسم العناصر داخل السلة
+            container.innerHTML = cart.map(item => {
+                const itemPrice = parseFloat(item.price);
+                const itemQty = parseInt(item.quantity);
+                const itemTotal = itemPrice * itemQty;
+
+                total += itemTotal;
+
+                return `
+        <div style="display:flex; justify-content:space-between; padding:15px 10px; border-bottom:1px solid #eee; align-items:center;">
+            
             <div style="flex:1">
-                <div style="font-weight:bold; font-size:0.9rem;">${item.name}</div>
-                <div style="font-size:0.8rem; color:#888;">العدد: ${itemQty}</div>
+                <div style="font-weight:bold; font-size:0.95rem; margin-bottom: 5px;">${item.name}</div>
+                
+                <div class="qty-controls" style="display: flex; align-items: center; gap: 8px;">
+                    <button class="qty-btn" onclick="changeQuantity('${item.id}', 1)" style="width: 24px; height: 24px; border-radius: 50%; border: 1px solid #e75480; background: white; color: #e75480; cursor: pointer; display: flex; align-items: center; justify-content: center;">+</button>
+                    <span style="font-weight: bold; min-width: 20px; text-align: center;">${itemQty}</span>
+                    <button class="qty-btn" onclick="changeQuantity('${item.id}', -1)" style="width: 24px; height: 24px; border-radius: 50%; border: 1px solid #e75480; background: white; color: #e75480; cursor: pointer; display: flex; align-items: center; justify-content: center;">-</button>
+                </div>
             </div>
-            <div style="font-weight:bold; color:var(--accent-pink); display:flex; align-items:center;">
-                ${itemTotal} ${riyalIcon}
+
+            <div style="text-align: left; display: flex; flex-direction: column; align-items: flex-end;">
+                <div style="font-weight:bold; color:var(--accent-pink); margin-bottom: 5px;">
+                    ${itemTotal} ${riyalIcon}
+                </div>
+                <button onclick="removeFromCart('${item.id}')" style="color:red; background:none; border:none; cursor:pointer; font-size: 0.9rem;">
+                    <i class="fas fa-trash"></i>
+                </button>
             </div>
-            <button onclick="removeFromCart('${item.id}')" style="margin-right:10px; color:red; background:none; border:none; cursor:pointer;">
-                <i class="fas fa-trash"></i>
-            </button>
+
         </div>`;
-    }).join('');
+            }).join('');
 
-    // 4. تحديث السعر الإجمالي النهائي
-    const totalEl = document.getElementById('cartTotal');
-    if (totalEl) totalEl.innerHTML = total + ' ' + riyalIcon;
+            // 4. تحديث السعر الإجمالي النهائي
+            const totalEl = document.getElementById('cartTotal');
+            if (totalEl) totalEl.innerHTML = total + ' ' + riyalIcon;
 
-    const finalTotal = document.getElementById('finalTotalAmount');
-    if (finalTotal) finalTotal.innerHTML = total + ' ' + riyalIcon;
+            const finalTotal = document.getElementById('finalTotalAmount');
+            if (finalTotal) finalTotal.innerHTML = total + ' ' + riyalIcon;
         }
+
+        // ==================== باقي الأكواد كما هي ====================
 
         // تعريف عناصر البحث
         const searchInput = document.getElementById('searchInput');
@@ -5863,21 +5926,23 @@
         });
 
         // دالة حذف منتج من السلة
-window.removeFromCart = function(id) {
-    // 1. البحث عن مكان المنتج في المصفوفة
-    const index = cart.findIndex(item => item.id == id);
-    
-    if (index > -1) {
-        // 2. حذف المنتج
-        cart.splice(index, 1);
-        
-        // 3. تحديث واجهة السلة وحفظ التغييرات
-        updateCart();
-        
-        // 4. إظهار رسالة تأكيد
-        showToast('تم حذف المنتج من السلة 🗑️');
-    }
-};
+        window.removeFromCart = function (id) {
+            // 1. البحث عن مكان المنتج في المصفوفة
+            const index = cart.findIndex(item => item.id == id);
+
+            if (index > -1) {
+                // 2. حذف المنتج
+                cart.splice(index, 1);
+
+                // 3. تحديث واجهة السلة وحفظ التغييرات
+                updateCart();
+
+                // 4. إظهار رسالة تأكيد
+                showToast('تم حذف المنتج من السلة 🗑️');
+            }
+        };
+
+
 
     </script>
 
