@@ -2918,7 +2918,22 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             cursor: pointer;
         }
-
+        /* إصلاح مكان زر الإغلاق في الموبايل */
+        @media (max-width: 768px) {
+            #bouquetBuilderModal .close-btn {
+                top: 25px !important; /* نزلناه لتحت بدل 15px */
+                left: 20px !important;
+                width: 40px !important; /* كبرنا مساحة اللمس */
+                height: 40px !important;
+                background: #fff !important; /* خلفية بيضاء عشان يبان */
+                box-shadow: 0 2px 8px rgba(0,0,0,0.15) !important; /* ظل عشان يوضح */
+                z-index: 2000 !important; /* عشان يظهر فوق أي حاجة */
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 50%;
+            }
+        }
         /* الهيدر */
         .modal-header {
             text-align: center;
@@ -4928,6 +4943,45 @@
             }
         }
 
+        /* تنسيق الإشعار الجديد داخل المصمم */
+        .builder-toast {
+            position: absolute;
+            bottom: 140px; /* يظهر فوق شريط الورد مباشرة */
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(44, 24, 16, 0.95); /* لون بني غامق فخم */
+            color: #fff;
+            padding: 8px 25px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-family: 'El Messiri', sans-serif;
+            font-weight: bold;
+            z-index: 2000; /* عشان يظهر فوق كل حاجة */
+            opacity: 0;
+            transition: all 0.3s ease;
+            pointer-events: none; /* عشان ميعطلش اللمس */
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+            width: max-content;
+            visibility: hidden;
+        }
+
+            .builder-toast.show {
+                opacity: 1;
+                bottom: 155px; /* حركة بسيطة للأعلى عند الظهور */
+                visibility: visible;
+            }
+
+            .builder-toast i {
+                color: #2ecc71; /* لون أيقونة الصح أخضر */
+                font-size: 1.1rem;
+            }
+
+            .builder-toast i {
+                color: #2ecc71; /* لون أيقونة الصح */
+            }
 
     </style>
 </head>
@@ -5026,14 +5080,18 @@
                         <div class="sticky-preview-container">
                             <div id="bouquetCanvas" class="bouquet-canvas">
                                 <img src="https://i.postimg.cc/C1cjzMZt/ablabla.png" class="wrapping-paper-bg" id="mainWrapperImg" alt="تغليف">
+
                                 <div id="flowersOverlay" class="flowers-overlay"></div>
+
                                 <div id="giftCardOverlay" class="gift-card-container hidden" style="top: 30px; background: #fffdf9; color: #4a4a4a;">
-                                    <span id="giftCardTextDisplay">أحبك</span>
-                                </div>
                                     <span id="giftCardTextDisplay">أحبك</span>
                                 </div>
                             </div>
                         </div>
+                    </div>
+
+                    <div id="builderToast" class="builder-toast">
+                        <i class="fas fa-check-circle"></i> <span id="builderToastText">تمت الإضافة</span>
                     </div>
 
                     <div class="controls-section" style="flex: 1; padding: 15px; padding-bottom: 100px; overflow-y: auto; display: flex; flex-direction: column; gap: 20px;">
@@ -5081,13 +5139,12 @@
 
                 </div>
             </div>
-
+        </div>
 
         <div class="products-grid" id="productsContainer">
         </div>
 
     </main>
-
     <!-- Features Section -->
 
 
@@ -5789,34 +5846,68 @@
             return { top, left, rotate, scale };
         }
 
+        // دالة إضافة الوردة (المعدلة للتمركز)
         window.addFlowerToBouquet = function (id) {
             const flower = singleFlowers.find(f => f.id === id);
             if (!flower) return;
-            const existing = myCustomBouquet.find(item => item.id === id);
-            if (existing) existing.qty++; else myCustomBouquet.push({ ...flower, qty: 1 });
 
+            // 1. تحديث المصفوفة (البيانات)
+            const existing = myCustomBouquet.find(item => item.id === id);
+            let currentQty = 1;
+            if (existing) {
+                existing.qty++;
+                currentQty = existing.qty;
+            } else {
+                myCustomBouquet.push({ ...flower, qty: 1 });
+            }
+
+            // 2. إضافة الصورة للكانفاس (الواجهة)
             const overlay = document.getElementById('flowersOverlay');
             const img = document.createElement('img');
             img.src = flower.img;
-            img.className = 'flower-on-canvas';
 
-            // 👇👇👇 هنا التعديل: غير الرقم ده (كان 80 وخليناه 130) 👇👇👇
+            // إضافة كلاس moved-manually عشان دالة الترتيب متلعبش في مكانها
+            img.className = 'flower-on-canvas moved-manually';
+
+            // === التمركز في منتصف الصورة ===
             img.style.width = '130px';
-            // 👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆
+            img.style.position = 'absolute';
+            img.style.left = '50%'; // منتصف العرض
+            img.style.top = '40%';  // منتصف الطول (مرفوع قليلاً)
+            img.style.transform = 'translate(-50%, -50%)'; // سنترة دقيقة
 
-            img.style.transition = 'transform 0.3s ease'; img.style.zIndex = '10';
-            img.style.cursor = 'grab'; img.style.touchAction = 'none';
-
-            if (['dome', 'heart', 'dense-spiral'].includes(currentLayout)) {
-                img.style.transformOrigin = 'center center';
-            } else {
-                img.style.transformOrigin = 'bottom center';
-            }
+            img.style.zIndex = '10';
+            img.style.cursor = 'grab';
+            img.style.touchAction = 'none';
+            img.style.transition = 'transform 0.2s'; // أنيميشن ناعم
 
             overlay.appendChild(img);
-            makeDraggable(img);
-            rearrangeFlowers();
+            makeDraggable(img); // تفعيل السحب
+
+            // تحديث السعر والعدد
             updateBouquetSummary();
+
+            // === إظهار الإشعار الجديد ===
+            showBuilderToast(flower.name, currentQty);
+        }
+
+        // دالة إظهار الإشعار المصغر (الجديدة)
+        function showBuilderToast(flowerName, qty) {
+            const toast = document.getElementById('builderToast');
+            const text = document.getElementById('builderToastText');
+
+            if (toast && text) {
+                // تغيير نص الرسالة
+                text.innerHTML = `تمت إضافة <strong style="color:#ffccd5; margin: 0 5px;">${qty}</strong> من ${flowerName}`;
+
+                // إظهار الإشعار
+                toast.classList.add('show');
+
+                // إخفاء تلقائي بعد ثانيتين
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 2000);
+            }
         }
 
         function rearrangeFlowers() {
